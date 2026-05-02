@@ -403,26 +403,117 @@ input[type="number"] { -moz-appearance: textfield; }
 @media (max-width: 768px) {
   .calc-layout {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 
-  .container { padding: 16px 12px 40px; }
+  .container { padding: 12px 12px 32px; }
 
-  header { padding: 20px 0 16px; }
-  header h1 { font-size: 1.35rem; }
+  header { padding: 16px 0 12px; }
+  header h1 { font-size: 1.2rem; line-height: 1.35; }
 
-  .tabs { gap: 0; overflow-x: auto; }
-  .tab { padding: 10px 16px; font-size: 0.85rem; white-space: nowrap; }
+  .toolbar { margin-top: 10px; gap: 6px; }
+  .toolbar-btn { padding: 6px 12px; font-size: 0.8rem; }
 
-  .card { padding: 18px; }
+  /* Tabs: hide scrollbar but keep horizontal scroll */
+  .tabs {
+    margin-bottom: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
 
-  input[type="number"] { width: 56px; }
+  .card { padding: 14px 12px; }
+  .card h2 { font-size: 0.95rem; margin-bottom: 14px; }
 
-  .npd-value { font-size: 2.4rem; }
+  /* Sliders: bigger touch target */
+  .slider-group { margin-bottom: 16px; }
+  .slider-group label { font-size: 0.82rem; margin-bottom: 8px; }
+  .slider-row { gap: 8px; }
+  input[type="range"] { height: 6px; }
+  input[type="range"]::-webkit-slider-thumb { width: 26px; height: 26px; }
+  input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; }
+  input[type="number"] {
+    width: 54px;
+    padding: 6px 4px;
+    font-size: 0.85rem;
+  }
+  .unit { font-size: 0.72rem; width: 20px; }
+
+  /* Dual slider: bigger thumbs for touch */
+  .dual-thumb { width: 26px; height: 26px; }
+  .dual-track, .dual-fill { height: 6px; }
+  .dual-slider { height: 36px; }
+
+  /* Calc detail */
+  .calc-detail { padding: 12px 14px; font-size: 0.85rem; margin-bottom: 14px; }
+  .edge-dist strong { font-size: 1.1rem; }
+
+  /* Tab 1 thickness table */
+  .results-table th { padding: 8px 6px; font-size: 0.7rem; white-space: normal; line-height: 1.25; }
+  .results-table td { padding: 9px 6px; font-size: 0.8rem; }
+
+  /* Tab 2 combo table: scroll horizontally, allow header wrap */
+  .table-scroll {
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+  .combo-table { font-size: 0.78rem; min-width: 480px; }
+  .combo-table th {
+    padding: 6px 5px;
+    font-size: 0.68rem;
+    white-space: normal;
+    line-height: 1.25;
+  }
+  .combo-table td { padding: 7px 5px; }
+  .combo-note { font-size: 0.78rem; margin-bottom: 10px; }
+
+  /* NPD: stack label above value */
+  .npd-big { padding: 18px 0 12px; font-size: 0.85rem; }
+  .npd-label { display: block; color: var(--text-secondary); margin-bottom: 4px; }
+  .npd-value { font-size: 2.6rem; line-height: 1.1; }
+  .npd-unit { font-size: 1.1rem; }
+  .npd-formula .formula-text,
+  .npd-formula .formula-sub { font-size: 0.78rem; word-break: break-word; }
 }
 
 @media (max-width: 480px) {
-  .slider-row input[type="number"] { width: 50px; font-size: 0.8rem; }
+  .container { padding: 10px 10px 28px; }
+  .card { padding: 12px 10px; }
+  header h1 { font-size: 1.1rem; }
+  .tab { padding: 9px 12px; font-size: 0.8rem; }
+  input[type="number"] { width: 50px; font-size: 0.8rem; }
+  .calc-detail { font-size: 0.8rem; padding: 10px 12px; }
+  .results-table th, .results-table td { padding: 7px 4px; }
+  .results-table th { font-size: 0.66rem; }
+  .results-table td { font-size: 0.76rem; }
+  .npd-value { font-size: 2.3rem; }
 }
+
+/* === Footer Info === */
+.info {
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  opacity: 0.75;
+  line-height: 1.8;
+}
+.info a {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 2px;
+}
+.info a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -614,6 +705,13 @@ input[type="number"] { -moz-appearance: textfield; }
       </div>
     </div>
   </section>
+
+  <footer class="info">
+    <span data-i18n="info.notice">仅供非商用 · 数据来源：</span>
+    <a href="http://lensya.com/" target="_blank" rel="noopener">lensya.com</a>
+    <span> · </span>
+    <a href="http://shiputai.cn/" target="_blank" rel="noopener">shiputai.cn</a>
+  </footer>
 </main>
 <script>
 /* ===== I18N & Theme ===== */
@@ -647,7 +745,8 @@ const I18N = {
       npdLabel: "近用瞳距 NPD = ",
       formula: "NPD = 远用PD × (距离 − 12) / (距离 + 13)",
       quickLabel: "快捷设定：", hintLabel: "简易系数："
-    }
+    },
+    info: { notice: "仅供非商用 · 数据来源：" }
   },
   en: {
     title: "Myopia Lens Calculator",
@@ -678,7 +777,8 @@ const I18N = {
       npdLabel: "Near PD = ",
       formula: "NPD = Distance PD × (ViewDist − 12) / (ViewDist + 13)",
       quickLabel: "Quick:", hintLabel: "Factors:"
-    }
+    },
+    info: { notice: "Non-commercial use only · Data source: " }
   }
 };
 
