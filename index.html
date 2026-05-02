@@ -682,7 +682,7 @@ function findInterval(nodes, value) {
 }
 
 function getEdgeThickness(power, lensType, distance) {
-  const pInt = findInterval(POWER_NODES, Math.abs(power));
+  const pInt = findInterval(POWER_NODES, -Math.abs(power));
   const loKey = pInt.lo.toFixed(2);
   const hiKey = pInt.hi.toFixed(2);
   const dataLo = THICKNESS_DATA[loKey] ? (THICKNESS_DATA[loKey][lensType] || null) : null;
@@ -707,7 +707,7 @@ function getEdgeThickness(power, lensType, distance) {
 }
 
 function getCenterThickness(power, lensType) {
-  const pInt = findInterval(POWER_NODES, Math.abs(power));
+  const pInt = findInterval(POWER_NODES, -Math.abs(power));
   const loKey = pInt.lo.toFixed(2);
   const hiKey = pInt.hi.toFixed(2);
   const cLo = THICKNESS_DATA[loKey]?.[lensType]?.center;
