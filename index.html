@@ -6,19 +6,19 @@
 <title>镜片边缘厚度计算器</title>
 </head>
 <body>
-<div class="container">
+<main class="container">
   <header>
     <h1>镜片边缘厚度计算器</h1>
   </header>
 
   <nav class="tabs" role="tablist">
-    <button class="tab active" role="tab" data-panel="panel-thickness" aria-selected="true">边缘厚度计算</button>
-    <button class="tab" role="tab" data-panel="panel-combo" aria-selected="false">最佳组合推荐</button>
-    <button class="tab" role="tab" data-panel="panel-npd" aria-selected="false">近用瞳距</button>
+    <button class="tab active" role="tab" id="tab-thickness" aria-controls="panel-thickness" data-panel="panel-thickness" aria-selected="true">边缘厚度计算</button>
+    <button class="tab" role="tab" id="tab-combo" aria-controls="panel-combo" data-panel="panel-combo" aria-selected="false">最佳组合推荐</button>
+    <button class="tab" role="tab" id="tab-npd" aria-controls="panel-npd" data-panel="panel-npd" aria-selected="false">近用瞳距</button>
   </nav>
 
   <!-- Tab 1: 边缘厚度计算 -->
-  <section class="tab-panel active" id="panel-thickness" role="tabpanel">
+  <section class="tab-panel active" id="panel-thickness" role="tabpanel" aria-labelledby="tab-thickness">
     <div class="calc-layout">
       <div class="inputs card">
         <h2>输入参数</h2>
@@ -79,7 +79,7 @@
   </section>
 
   <!-- Tab 2: 最佳组合推荐 -->
-  <section class="tab-panel" id="panel-combo" role="tabpanel">
+  <section class="tab-panel" id="panel-combo" role="tabpanel" aria-labelledby="tab-combo" hidden>
     <div class="calc-layout">
       <div class="inputs card">
         <h2>输入参数</h2>
@@ -127,7 +127,7 @@
   </section>
 
   <!-- Tab 3: 近用瞳距计算 -->
-  <section class="tab-panel" id="panel-npd" role="tabpanel">
+  <section class="tab-panel" id="panel-npd" role="tabpanel" aria-labelledby="tab-npd" hidden>
     <div class="calc-layout">
       <div class="inputs card">
         <h2>输入参数</h2>
@@ -149,9 +149,9 @@
         </div>
         <div class="quick-buttons">
           <span class="quick-label">快捷设定：</span>
-          <button class="quick-btn" data-distance="40">40cm</button>
-          <button class="quick-btn active" data-distance="30">30cm</button>
-          <button class="quick-btn" data-distance="25">25cm</button>
+          <button type="button" class="quick-btn" data-distance="40" aria-pressed="false">40cm</button>
+          <button type="button" class="quick-btn active" data-distance="30" aria-pressed="true">30cm</button>
+          <button type="button" class="quick-btn" data-distance="25" aria-pressed="false">25cm</button>
         </div>
       </div>
 
@@ -175,6 +175,6 @@
       </div>
     </div>
   </section>
-</div>
+</main>
 </body>
 </html>
