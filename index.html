@@ -4,6 +4,374 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>镜片边缘厚度计算器</title>
+<style>
+/* === Design Tokens === */
+:root {
+  --bg: #f5f5f7;
+  --card-bg: #ffffff;
+  --text: #1a1a1a;
+  --text-secondary: #6b7280;
+  --accent: #2563eb;
+  --accent-light: #dbeafe;
+  --highlight: #f59e0b;
+  --border: #e5e7eb;
+  --radius-card: 12px;
+  --radius-btn: 8px;
+  --radius-tab: 2px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --font-serif: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", serif;
+}
+
+/* === Reset === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font-serif);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* === Layout === */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+header {
+  text-align: center;
+  padding: 32px 0 24px;
+}
+
+header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* === Tabs === */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  gap: 0;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 12px 24px;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tab:hover { color: var(--text); }
+
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* === Tab Panels === */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.tab-panel[hidden] { display: none; }
+
+/* === Card === */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.card-inner {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+/* === Two Column Layout === */
+.calc-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* === Slider Group === */
+.slider-group {
+  margin-bottom: 18px;
+}
+
+.slider-group label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* === Range Input (Slider) === */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--accent);
+  cursor: pointer;
+  transition: width 0.15s, height 0.15s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  width: 24px;
+  height: 24px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--accent);
+  cursor: pointer;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+/* === Number Input === */
+input[type="number"] {
+  width: 64px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  transition: border-color 0.2s;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Remove number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] { -moz-appearance: textfield; }
+
+.unit {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  width: 24px;
+}
+
+/* === Results Area === */
+.calc-detail {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  font-size: 0.925rem;
+}
+
+.calc-detail p { margin-bottom: 4px; }
+.calc-detail p:last-child { margin-bottom: 0; }
+
+.fd-line, .decent-line { color: var(--text-secondary); }
+
+.edge-dist {
+  color: var(--text);
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.edge-dist strong {
+  font-size: 1.2rem;
+  color: var(--accent);
+}
+
+/* === Results Table === */
+.results-table, .combo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.results-table th, .combo-table th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.results-table td, .combo-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.results-table tbody tr:hover { background: #f8fafc; }
+
+.results-table .thinnest-row { background: #fefce8; }
+.results-table .thinnest-row td:last-child {
+  color: var(--highlight);
+  font-weight: 600;
+}
+
+/* === Combo Table (Tab 2) === */
+.table-scroll { overflow-x: auto; }
+
+.combo-table { font-size: 0.85rem; }
+
+.combo-table .top-row {
+  background: #fefce8;
+  font-weight: 600;
+}
+
+/* === Quick Buttons (Tab 3) === */
+.quick-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.quick-label { font-size: 0.8rem; color: var(--text-secondary); }
+
+.quick-btn {
+  padding: 4px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  background: var(--card-bg);
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.quick-btn:hover { border-color: var(--accent); color: var(--accent); }
+.quick-btn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* === NPD Result === */
+.npd-big {
+  text-align: center;
+  padding: 24px 0 16px;
+  font-size: 1.1rem;
+}
+
+.npd-value {
+  font-size: 3rem;
+  font-weight: 600;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.npd-unit { font-size: 1.2rem; color: var(--text-secondary); }
+
+.npd-formula .formula-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.npd-formula .formula-sub {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.npd-hints {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.hint-label { font-weight: 600; }
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .calc-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .container { padding: 16px 12px 40px; }
+
+  header { padding: 20px 0 16px; }
+  header h1 { font-size: 1.35rem; }
+
+  .tabs { gap: 0; overflow-x: auto; }
+  .tab { padding: 10px 16px; font-size: 0.85rem; white-space: nowrap; }
+
+  .card { padding: 18px; }
+
+  input[type="number"] { width: 56px; }
+
+  .npd-value { font-size: 2.4rem; }
+}
+
+@media (max-width: 480px) {
+  .slider-row input[type="number"] { width: 50px; font-size: 0.8rem; }
+  .quick-buttons { flex-wrap: wrap; }
+}
+</style>
 </head>
 <body>
 <main class="container">
