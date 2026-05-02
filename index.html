@@ -103,6 +103,7 @@ header h1 {
 /* === Tabs === */
 .tabs {
   display: flex;
+  justify-content: safe center;
   border-bottom: 1px solid var(--border);
   margin-bottom: 24px;
   gap: 0;
@@ -163,6 +164,9 @@ header h1 {
   gap: 24px;
   align-items: start;
 }
+
+/* Prevent grid items from overflowing viewport when child content (e.g., wide tables) is wider than the cell */
+.calc-layout > * { min-width: 0; }
 
 /* === Slider Group === */
 .slider-group {
