@@ -3,17 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>镜片边缘厚度计算器</title>
+<title>近视镜片相关信息计算器</title>
 <style>
 /* === Design Tokens === */
 :root {
   --bg: #f5f5f7;
   --card-bg: #ffffff;
+  --card-inner-bg: #f9fafb;
   --text: #1a1a1a;
   --text-secondary: #6b7280;
   --accent: #2563eb;
   --accent-light: #dbeafe;
   --highlight: #f59e0b;
+  --highlight-bg: #fefce8;
   --border: #e5e7eb;
   --radius-card: 12px;
   --radius-btn: 8px;
@@ -21,6 +23,27 @@
   --shadow: 0 1px 3px rgba(0,0,0,0.08);
   --font-serif: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", serif;
 }
+
+[data-theme="dark"] {
+  --bg: #1a1a2e;
+  --card-bg: #252540;
+  --card-inner-bg: #1e1e35;
+  --text: #e0e0e0;
+  --text-secondary: #a0a0b0;
+  --accent: #5b8def;
+  --accent-light: #1e3050;
+  --highlight: #f0c040;
+  --highlight-bg: #2a2818;
+  --border: #3a3a55;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] input[type="number"] { background: #333355; color: var(--text); border-color: var(--border); }
+[data-theme="dark"] input[type="range"]::-webkit-slider-thumb { background: #333355; }
+[data-theme="dark"] input[type="range"]::-moz-range-thumb { background: #333355; }
+[data-theme="dark"] .dual-thumb { background: #333355; }
+[data-theme="dark"] .results-table tbody tr:hover { background: #2a2a45; }
+[data-theme="dark"] .combo-table .top-row { background: var(--highlight-bg); }
 
 /* === Reset === */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -52,6 +75,30 @@ header h1 {
   font-weight: 600;
   letter-spacing: 0.02em;
 }
+
+/* === Toolbar (theme/lang toggles) === */
+.toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.toolbar-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  background: var(--card-bg);
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.toolbar-btn:hover { border-color: var(--accent); color: var(--accent); }
+.toolbar-btn.current { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 
 /* === Tabs === */
 .tabs {
@@ -103,7 +150,7 @@ header h1 {
 }
 
 .card-inner {
-  background: #f9fafb;
+  background: var(--card-inner-bg);
   border-radius: 8px;
   padding: 16px;
   margin-top: 12px;
@@ -210,11 +257,65 @@ input[type="number"] { -moz-appearance: textfield; }
   width: 24px;
 }
 
+/* === Dual Range Slider === */
+.dual-slider {
+  position: relative;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  touch-action: none;
+}
+
+.dual-track {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.dual-fill {
+  position: absolute;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.dual-thumb {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--accent);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  transition: width 0.15s, height 0.15s;
+}
+
+.dual-thumb:hover, .dual-thumb:active { width: 24px; height: 24px; }
+
+.dual-values {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+
+.dual-val-lo, .dual-val-hi {
+  color: var(--text);
+  font-weight: 500;
+}
+
 /* === Results Area === */
 .calc-detail {
   margin-bottom: 20px;
   padding: 14px 16px;
-  background: #f9fafb;
+  background: var(--card-inner-bg);
   border-radius: 8px;
   font-size: 0.925rem;
 }
@@ -261,49 +362,14 @@ input[type="number"] { -moz-appearance: textfield; }
 
 .results-table tbody tr:hover { background: #f8fafc; }
 
-.results-table .thinnest-row { background: #fefce8; }
-.results-table .thinnest-row td:last-child {
-  color: var(--highlight);
-  font-weight: 600;
-}
-
 /* === Combo Table (Tab 2) === */
 .table-scroll { overflow-x: auto; }
 
 .combo-table { font-size: 0.85rem; }
 
 .combo-table .top-row {
-  background: #fefce8;
+  background: var(--highlight-bg);
   font-weight: 600;
-}
-
-/* === Quick Buttons (Tab 3) === */
-.quick-buttons {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.quick-label { font-size: 0.8rem; color: var(--text-secondary); }
-
-.quick-btn {
-  padding: 4px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-btn);
-  background: var(--card-bg);
-  font-family: var(--font-serif);
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: 0.15s;
-}
-
-.quick-btn:hover { border-color: var(--accent); color: var(--accent); }
-.quick-btn.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
 }
 
 /* === NPD Result === */
@@ -333,19 +399,6 @@ input[type="number"] { -moz-appearance: textfield; }
   font-variant-numeric: tabular-nums;
 }
 
-.npd-hints {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-
-.hint-label { font-weight: 600; }
-
 /* === Responsive === */
 @media (max-width: 768px) {
   .calc-layout {
@@ -369,29 +422,33 @@ input[type="number"] { -moz-appearance: textfield; }
 
 @media (max-width: 480px) {
   .slider-row input[type="number"] { width: 50px; font-size: 0.8rem; }
-  .quick-buttons { flex-wrap: wrap; }
 }
 </style>
 </head>
 <body>
 <main class="container">
   <header>
-    <h1>镜片边缘厚度计算器</h1>
+    <h1 data-i18n="title">近视镜片相关信息计算器</h1>
+    <div class="toolbar">
+      <button class="toolbar-btn" id="btn-theme" title="切换夜间模式">🌙</button>
+      <button class="toolbar-btn current" data-lang="zh">中</button>
+      <button class="toolbar-btn" data-lang="en">EN</button>
+    </div>
   </header>
 
   <nav class="tabs" role="tablist">
-    <button class="tab active" role="tab" id="tab-thickness" aria-controls="panel-thickness" data-panel="panel-thickness" aria-selected="true">边缘厚度计算</button>
-    <button class="tab" role="tab" id="tab-combo" aria-controls="panel-combo" data-panel="panel-combo" aria-selected="false">最佳组合推荐</button>
-    <button class="tab" role="tab" id="tab-npd" aria-controls="panel-npd" data-panel="panel-npd" aria-selected="false">近用瞳距</button>
+    <button class="tab active" role="tab" id="tab-thickness" aria-controls="panel-thickness" data-panel="panel-thickness" aria-selected="true" data-i18n="tabs.thickness">边缘厚度计算</button>
+    <button class="tab" role="tab" id="tab-combo" aria-controls="panel-combo" data-panel="panel-combo" aria-selected="false" data-i18n="tabs.combo">最佳组合推荐</button>
+    <button class="tab" role="tab" id="tab-npd" aria-controls="panel-npd" data-panel="panel-npd" aria-selected="false" data-i18n="tabs.npd">近用瞳距</button>
   </nav>
 
   <!-- Tab 1: 边缘厚度计算 -->
   <section class="tab-panel active" id="panel-thickness" role="tabpanel" aria-labelledby="tab-thickness">
     <div class="calc-layout">
       <div class="inputs card">
-        <h2>输入参数</h2>
+        <h2 data-i18n="common.inputParams">输入参数</h2>
         <div class="slider-group">
-          <label for="power">度数 (S)</label>
+          <label for="power" data-i18n="common.power">最高单眼近视度数（不含散光）</label>
           <div class="slider-row">
             <input type="range" id="power" min="-12" max="-1" step="0.25" value="-5">
             <input type="number" id="power-val" min="-12" max="-1" step="0.25" value="-5.00">
@@ -399,7 +456,7 @@ input[type="number"] { -moz-appearance: textfield; }
           </div>
         </div>
         <div class="slider-group">
-          <label for="lens-width">镜框的镜片宽度</label>
+          <label for="lens-width" data-i18n="common.lensWidth">镜框的镜片宽度</label>
           <div class="slider-row">
             <input type="range" id="lens-width" min="35" max="63" step="1" value="53">
             <input type="number" id="lens-width-val" min="35" max="63" step="1" value="53">
@@ -407,7 +464,7 @@ input[type="number"] { -moz-appearance: textfield; }
           </div>
         </div>
         <div class="slider-group">
-          <label for="bridge">镜框的中梁宽度</label>
+          <label for="bridge" data-i18n="common.bridge">镜框的中梁宽度</label>
           <div class="slider-row">
             <input type="range" id="bridge" min="10" max="25" step="1" value="18">
             <input type="number" id="bridge-val" min="10" max="25" step="1" value="18">
@@ -415,7 +472,7 @@ input[type="number"] { -moz-appearance: textfield; }
           </div>
         </div>
         <div class="slider-group">
-          <label for="pd">瞳距 (PD)</label>
+          <label for="pd" data-i18n="common.pd">瞳距 (PD)</label>
           <div class="slider-row">
             <input type="range" id="pd" min="50" max="72" step="0.5" value="64">
             <input type="number" id="pd-val" min="50" max="72" step="0.5" value="64">
@@ -425,18 +482,19 @@ input[type="number"] { -moz-appearance: textfield; }
       </div>
 
       <div class="results card">
-        <h2>计算结果</h2>
         <div class="calc-detail">
-          <p class="fd-line">镜框几何中心距 FD = <span id="fd-val">124</span>mm</p>
-          <p class="decent-line">水平移心（单眼）= <span id="decent-val">30</span>mm</p>
-          <p class="edge-dist">中心到边缘距离 = <strong id="edge-dist-val">30</strong>mm</p>
+          <p class="fd-line" id="fd-line">镜框几何中心距 FD = <span id="fd-val">124</span>mm</p>
+          <p class="decent-line" id="decent-line">水平移心（单眼）= <span id="decent-val">30</span>mm</p>
+          <p class="edge-dist" id="edge-dist-line">中心到边缘距离 = <strong id="edge-dist-val">30</strong>mm</p>
         </div>
         <table class="results-table">
           <thead>
             <tr>
-              <th>折射率 / 设计</th>
-              <th>中心厚</th>
-              <th>边缘厚</th>
+              <th data-i18n="tab1.colRefractive">折射率，是非球面</th>
+              <th data-i18n="tab1.colCenter">中心厚</th>
+              <th data-i18n="tab1.colEdge">边缘厚</th>
+              <th data-i18n="tab1.colDensity">理论密度</th>
+              <th data-i18n="tab1.colAbbe">理论阿贝数</th>
             </tr>
           </thead>
           <tbody id="thickness-results">
@@ -450,9 +508,9 @@ input[type="number"] { -moz-appearance: textfield; }
   <section class="tab-panel" id="panel-combo" role="tabpanel" aria-labelledby="tab-combo" hidden>
     <div class="calc-layout">
       <div class="inputs card">
-        <h2>输入参数</h2>
+        <h2 data-i18n="common.inputParams">输入参数</h2>
         <div class="slider-group">
-          <label for="combo-power">度数 (S)</label>
+          <label for="combo-power" data-i18n="common.powerShort">度数 (S)</label>
           <div class="slider-row">
             <input type="range" id="combo-power" min="-12" max="-1" step="0.25" value="-5">
             <input type="number" id="combo-power-val" min="-12" max="-1" step="0.25" value="-5.00">
@@ -460,30 +518,56 @@ input[type="number"] { -moz-appearance: textfield; }
           </div>
         </div>
         <div class="slider-group">
-          <label for="combo-pd">瞳距 (PD)</label>
+          <label for="combo-pd" data-i18n="common.pd">瞳距 (PD)</label>
           <div class="slider-row">
             <input type="range" id="combo-pd" min="50" max="72" step="0.5" value="64">
             <input type="number" id="combo-pd-val" min="50" max="72" step="0.5" value="64">
             <span class="unit">mm</span>
           </div>
         </div>
+        <div class="slider-group">
+          <label data-i18n="tab2.lwRange">片宽范围</label>
+          <div class="dual-slider" id="combo-lw-range">
+            <div class="dual-track"><div class="dual-fill"></div></div>
+            <div class="dual-thumb dual-thumb-lo"></div>
+            <div class="dual-thumb dual-thumb-hi"></div>
+          </div>
+          <div class="dual-values">
+            <span class="dual-val-lo" id="combo-lw-lo">40</span>
+            <span>–</span>
+            <span class="dual-val-hi" id="combo-lw-hi">60</span>
+            <span class="unit">mm</span>
+          </div>
+        </div>
+        <div class="slider-group">
+          <label data-i18n="tab2.brRange">中梁宽范围</label>
+          <div class="dual-slider" id="combo-br-range">
+            <div class="dual-track"><div class="dual-fill"></div></div>
+            <div class="dual-thumb dual-thumb-lo"></div>
+            <div class="dual-thumb dual-thumb-hi"></div>
+          </div>
+          <div class="dual-values">
+            <span class="dual-val-lo" id="combo-br-lo">13</span>
+            <span>–</span>
+            <span class="dual-val-hi" id="combo-br-hi">23</span>
+            <span class="unit">mm</span>
+          </div>
+        </div>
       </div>
 
       <div class="results card">
-        <h2>最佳组合 (按边缘厚度升序)</h2>
-        <p class="combo-note">片宽范围 35–63mm，中梁宽范围 10–25mm，共 <span id="combo-total">0</span> 种组合</p>
+        <p class="combo-note" id="combo-note">共 <span id="combo-total">0</span> 种组合</p>
         <div class="table-scroll">
           <table class="combo-table">
             <thead>
               <tr>
                 <th>#</th>
-                <th>片宽</th>
-                <th>中梁宽</th>
-                <th>框中心距</th>
-                <th>中心到边距</th>
-                <th>1.74 边缘厚</th>
-                <th>1.67 边缘厚</th>
-                <th>1.60 边缘厚</th>
+                <th data-i18n="tab2.colLensWidth">片宽</th>
+                <th data-i18n="tab2.colBridge">中梁宽</th>
+                <th data-i18n="tab2.col174">1.74 边缘厚</th>
+                <th data-i18n="tab2.col167">1.67 边缘厚</th>
+                <th data-i18n="tab2.col160">1.60 边缘厚</th>
+                <th data-i18n="tab2.col150">1.50 边缘厚</th>
               </tr>
             </thead>
             <tbody id="combo-results">
@@ -498,9 +582,9 @@ input[type="number"] { -moz-appearance: textfield; }
   <section class="tab-panel" id="panel-npd" role="tabpanel" aria-labelledby="tab-npd" hidden>
     <div class="calc-layout">
       <div class="inputs card">
-        <h2>输入参数</h2>
+        <h2 data-i18n="common.inputParams">输入参数</h2>
         <div class="slider-group">
-          <label for="npd-dist-pd">远用瞳距 (PD)</label>
+          <label for="npd-dist-pd" data-i18n="common.distPd">远用瞳距 (PD)</label>
           <div class="slider-row">
             <input type="range" id="npd-dist-pd" min="50" max="72" step="0.5" value="65">
             <input type="number" id="npd-dist-pd-val" min="50" max="72" step="0.5" value="65">
@@ -508,43 +592,158 @@ input[type="number"] { -moz-appearance: textfield; }
           </div>
         </div>
         <div class="slider-group">
-          <label for="npd-distance">视近距离</label>
+          <label for="npd-distance" data-i18n="common.viewDist">视近距离</label>
           <div class="slider-row">
             <input type="range" id="npd-distance" min="20" max="100" step="1" value="40">
             <input type="number" id="npd-distance-val" min="20" max="100" step="1" value="40">
             <span class="unit">cm</span>
           </div>
         </div>
-        <div class="quick-buttons">
-          <span class="quick-label">快捷设定：</span>
-          <button type="button" class="quick-btn" data-distance="40" aria-pressed="false">40cm</button>
-          <button type="button" class="quick-btn active" data-distance="30" aria-pressed="true">30cm</button>
-          <button type="button" class="quick-btn" data-distance="25" aria-pressed="false">25cm</button>
-        </div>
       </div>
 
       <div class="results card npd-results">
-        <h2>计算结果</h2>
         <div class="npd-big">
-          <span class="npd-label">近用瞳距 NPD = </span>
+          <span class="npd-label" id="npd-label">近用瞳距 NPD = </span>
           <span class="npd-value" id="npd-result">61.2</span>
           <span class="npd-unit">mm</span>
         </div>
         <div class="npd-formula card-inner">
-          <p class="formula-text">NPD = 远用PD × (距离 − 12) / (距离 + 13)</p>
+          <p class="formula-text" data-i18n="tab3.formula">NPD = 远用PD × (距离 − 12) / (距离 + 13)</p>
           <p class="formula-sub" id="npd-formula-instance">NPD = 65 × (400 − 12) / (400 + 13) = 61.2mm</p>
-        </div>
-        <div class="npd-hints">
-          <span class="hint-label">简易系数：</span>
-          <span>40cm → ×0.94</span>
-          <span>30cm → ×0.93</span>
-          <span>25cm → ×0.91</span>
         </div>
       </div>
     </div>
   </section>
 </main>
 <script>
+/* ===== I18N & Theme ===== */
+const I18N = {
+  zh: {
+    title: "近视镜片相关信息计算器",
+    tabs: { thickness: "边缘厚度计算", combo: "最佳组合推荐", npd: "近用瞳距" },
+    common: {
+      inputParams: "输入参数", calcResults: "计算结果",
+      power: "最高单眼近视度数（不含散光）", pd: "瞳距 (PD)",
+      lensWidth: "镜框的镜片宽度", bridge: "镜框的中梁宽度",
+      powerShort: "度数 (S)", distPd: "远用瞳距 (PD)", viewDist: "视近距离"
+    },
+    tab1: {
+      fd: "镜框几何中心距 FD = {0}mm",
+      decent: "水平移心（单眼）= {0}mm",
+      edgeDist: "中心到边缘距离 = {0}mm",
+      colRefractive: "折射率，是非球面", colCenter: "中心厚", colEdge: "边缘厚",
+      colDensity: "理论密度", colAbbe: "理论阿贝数",
+      baseline: "基准", mm: "mm"
+    },
+    tab2: {
+      title: "最佳组合 (按边缘厚度升序)",
+      lwRange: "片宽范围", brRange: "中梁宽范围",
+      note: "片宽 {0}–{1}mm，中梁宽 {2}–{3}mm，共 {4} 种组合",
+      colLensWidth: "片宽", colBridge: "中梁宽",
+      col174: "1.74 边缘厚", col167: "1.67 边缘厚",
+      col160: "1.60 边缘厚", col150: "1.50 边缘厚"
+    },
+    tab3: {
+      npdLabel: "近用瞳距 NPD = ",
+      formula: "NPD = 远用PD × (距离 − 12) / (距离 + 13)",
+      quickLabel: "快捷设定：", hintLabel: "简易系数："
+    }
+  },
+  en: {
+    title: "Myopia Lens Calculator",
+    tabs: { thickness: "Edge Thickness", combo: "Best Combos", npd: "Near PD" },
+    common: {
+      inputParams: "Input Parameters", calcResults: "Results",
+      power: "Max Sphere Power (excl. cyl)", pd: "PD",
+      lensWidth: "Frame Lens Width", bridge: "Frame Bridge Width",
+      powerShort: "Power (S)", distPd: "Distance PD", viewDist: "Viewing Distance"
+    },
+    tab1: {
+      fd: "Frame Distance FD = {0}mm",
+      decent: "Decentration (monocular) = {0}mm",
+      edgeDist: "Center to Edge Distance = {0}mm",
+      colRefractive: "Refractive Index & Design", colCenter: "Center Thickness",
+      colEdge: "Edge Thickness", colDensity: "Est. Density", colAbbe: "Est. Abbe",
+      baseline: "baseline", mm: "mm"
+    },
+    tab2: {
+      title: "Best Combos (by Edge Thickness)",
+      lwRange: "Lens Width Range", brRange: "Bridge Range",
+      note: "Lens width {0}–{1}mm, bridge {2}–{3}mm, {4} combos",
+      colLensWidth: "Width", colBridge: "Bridge",
+      col174: "1.74 Edge", col167: "1.67 Edge",
+      col160: "1.60 Edge", col150: "1.50 Edge"
+    },
+    tab3: {
+      npdLabel: "Near PD = ",
+      formula: "NPD = Distance PD × (ViewDist − 12) / (ViewDist + 13)",
+      quickLabel: "Quick:", hintLabel: "Factors:"
+    }
+  }
+};
+
+let currentLang = localStorage.getItem("lang") || "zh";
+let currentTheme = localStorage.getItem("theme") || "light";
+
+function translateLensType(type) {
+  if (currentLang === "en") {
+    return type.replace("非球面", "Aspheric").replace("球面", "Spherical");
+  }
+  return type;
+}
+
+function t(key, ...args) {
+  const keys = key.split(".");
+  let v = I18N[currentLang];
+  for (const k of keys) { v = v ? v[k] : undefined; }
+  if (typeof v !== "string") return key;
+  for (let i = 0; i < args.length; i++) { v = v.replace("{" + i + "}", args[i]); }
+  return v;
+}
+
+function renderI18n() {
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute("data-theme", currentTheme);
+  const btn = document.getElementById("btn-theme");
+  if (btn) btn.textContent = currentTheme === "dark" ? "☀️" : "🌙";
+}
+
+function applyLang() {
+  document.querySelectorAll("[data-lang]").forEach(btn => {
+    btn.classList.toggle("current", btn.dataset.lang === currentLang);
+  });
+  renderI18n();
+  updateThicknessTable();
+  updateComboTable();
+  updateNPD();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initTabs();
+  initTab1();
+  initTab2();
+  initTab3();
+  applyTheme();
+  applyLang();
+
+  document.getElementById("btn-theme").addEventListener("click", () => {
+    currentTheme = currentTheme === "dark" ? "light" : "dark";
+    localStorage.setItem("theme", currentTheme);
+    applyTheme();
+  });
+
+  document.querySelectorAll("[data-lang]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentLang = btn.dataset.lang;
+      localStorage.setItem("lang", currentLang);
+      applyLang();
+    });
+  });
+});
+
 /* ===== 塑料镜片厚度数据 ===== */
 const THICKNESS_DATA = {
   "-10.00": {
@@ -900,6 +1099,10 @@ const LENS_ORDER = [
   "1.50 球面",
 ];
 
+// 按折射率索引（同折射率不同设计共用）
+const SPECIFIC_GRAVITY = { "1.76": 1.49, "1.74": 1.46, "1.70": 1.41, "1.67": 1.35, "1.60": 1.30, "1.50": 1.32 };
+const ABBE_NUMBER = { "1.76": 30, "1.74": 33, "1.70": 36, "1.67": 32, "1.60": 42, "1.50": 58 };
+
 const POWER_NODES = Object.keys(THICKNESS_DATA)
   .map(Number)
   .sort((a, b) => a - b);
@@ -1031,19 +1234,32 @@ function updateThicknessTable() {
 
   const result = getAllThicknesses(power, lensWidth, bridge, pd);
 
-  document.getElementById("fd-val").textContent = result.fd;
-  document.getElementById("decent-val").textContent = result.decent.toFixed(1);
-  document.getElementById("edge-dist-val").textContent = result.edgeDist.toFixed(1);
+  document.getElementById("fd-line").textContent = t("tab1.fd", result.fd);
+  document.getElementById("decent-line").textContent = t("tab1.decent", result.decent.toFixed(1));
+  document.getElementById("edge-dist-line").textContent = t("tab1.edgeDist", result.edgeDist.toFixed(1));
 
   const tbody = document.getElementById("thickness-results");
-  const minEdge = Math.min(...result.rows.map(r => r.edge));
 
   tbody.innerHTML = result.rows.map(r => {
-    const isThinnest = r.edge === minEdge;
-    return `<tr class="${isThinnest ? "thinnest-row" : ""}">
-      <td>${r.lensType}</td>
-      <td>${r.center.toFixed(1)}mm</td>
-      <td>${r.edge.toFixed(1)}mm${isThinnest ? " ◀ 最薄" : ""}</td>
+    const idx = r.lensType.split(" ")[0];
+    const sg = SPECIFIC_GRAVITY[idx];
+    const abbe = ABBE_NUMBER[idx];
+    let density = "";
+    if (sg != null) {
+      if (idx === "1.60") {
+        density = t("tab1.baseline");
+      } else {
+        const pct = ((sg / 1.30) - 1) * 100;
+        density = (pct > 0 ? "+" : "") + pct.toFixed(1) + "%";
+      }
+    }
+    const mm = t("tab1.mm");
+    return `<tr>
+      <td>${translateLensType(r.lensType)}</td>
+      <td>${r.center.toFixed(1)}${mm}</td>
+      <td>${r.edge.toFixed(1)}${mm}</td>
+      <td>${density}</td>
+      <td>${abbe != null ? abbe : ""}</td>
     </tr>`;
   }).join("");
 }
@@ -1058,27 +1274,91 @@ function initTab1() {
 }
 
 /* ===== Tab 2: 最佳组合推荐 ===== */
+
+let comboState = {
+  lwLo: 40, lwHi: 60, lwMin: 35, lwMax: 63, lwStep: 1,
+  brLo: 13, brHi: 23, brMin: 10, brMax: 25, brStep: 1
+};
+
+function initDualSlider(el, state, key, callback) {
+  const track = el.querySelector(".dual-track");
+  const fill = el.querySelector(".dual-fill");
+  const thumbLo = el.querySelector(".dual-thumb-lo");
+  const thumbHi = el.querySelector(".dual-thumb-hi");
+  let active = null;
+
+  function pct(v) { return ((v - state[key + "Min"]) / (state[key + "Max"] - state[key + "Min"])) * 100; }
+  function val(p) { return Math.round(p * (state[key + "Max"] - state[key + "Min"]) / state[key + "Step"]) * state[key + "Step"] + state[key + "Min"]; }
+
+  function updateVisual() {
+    const loPct = pct(state[key + "Lo"]);
+    const hiPct = pct(state[key + "Hi"]);
+    thumbLo.style.left = loPct + "%";
+    thumbHi.style.left = hiPct + "%";
+    fill.style.left = loPct + "%";
+    fill.style.width = (hiPct - loPct) + "%";
+  }
+
+  function getPos(e) {
+    const rect = track.getBoundingClientRect();
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    return Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+  }
+
+  el.addEventListener("pointerdown", (e) => {
+    const p = getPos(e);
+    const mid = (pct(state[key + "Lo"]) + pct(state[key + "Hi"])) / 2 / 100;
+    active = p <= mid ? "lo" : "hi";
+    el.setPointerCapture(e.pointerId);
+  });
+
+  el.addEventListener("pointermove", (e) => {
+    if (!active) return;
+    const raw = val(getPos(e));
+    if (active === "lo") {
+      state[key + "Lo"] = Math.max(state[key + "Min"], Math.min(raw, state[key + "Hi"] - state[key + "Step"]));
+    } else {
+      state[key + "Hi"] = Math.min(state[key + "Max"], Math.max(raw, state[key + "Lo"] + state[key + "Step"]));
+    }
+    updateVisual();
+    document.getElementById("combo-" + key + "-lo").textContent = state[key + "Lo"];
+    document.getElementById("combo-" + key + "-hi").textContent = state[key + "Hi"];
+    callback();
+  });
+
+  el.addEventListener("pointerup", () => { active = null; });
+  el.addEventListener("pointerleave", () => { active = null; });
+
+  updateVisual();
+}
+
 function updateComboTable() {
   const power = parseFloat(document.getElementById("combo-power").value);
   const pd = parseFloat(document.getElementById("combo-pd").value);
+  const lwMin = comboState.lwLo;
+  const lwMax = comboState.lwHi;
+  const brMin = comboState.brLo;
+  const brMax = comboState.brHi;
 
   const combos = [];
-  for (let lw = 35; lw <= 63; lw++) {
-    for (let br = 10; br <= 25; br++) {
+  for (let lw = lwMin; lw <= lwMax; lw++) {
+    for (let br = brMin; br <= brMax; br++) {
       const fd = lw * 2 + br;
       const edgeDist = (fd - pd) / 2;
       const t174 = getEdgeThickness(power, "1.74 非球面", edgeDist);
       const t167 = getEdgeThickness(power, "1.67 非球面", edgeDist);
       const t160 = getEdgeThickness(power, "1.60 非球面", edgeDist);
+      const t150 = getEdgeThickness(power, "1.50 非球面", edgeDist);
       if (t174 != null) {
-        combos.push({ lensWidth: lw, bridge: br, fd, edgeDist, t174, t167, t160 });
+        combos.push({ lensWidth: lw, bridge: br, t174, t167, t160, t150 });
       }
     }
   }
 
   combos.sort((a, b) => a.t174 - b.t174);
 
-  document.getElementById("combo-total").textContent = combos.length;
+  document.getElementById("combo-note").textContent =
+    t("tab2.note", lwMin, lwMax, brMin, brMax, combos.length);
 
   const tbody = document.getElementById("combo-results");
   const display = combos.slice(0, 50);
@@ -1089,11 +1369,10 @@ function updateComboTable() {
       <td>${i + 1}</td>
       <td>${c.lensWidth}</td>
       <td>${c.bridge}</td>
-      <td>${c.fd}</td>
-      <td>${c.edgeDist.toFixed(1)}</td>
       <td>${c.t174.toFixed(1)}</td>
       <td>${c.t167.toFixed(1)}</td>
       <td>${c.t160.toFixed(1)}</td>
+      <td>${c.t150.toFixed(1)}</td>
     </tr>`;
   }).join("");
 }
@@ -1102,6 +1381,8 @@ function initTab2() {
   const onChange = updateComboTable;
   bindSlider("combo-power", "combo-power-val", onChange);
   bindSlider("combo-pd", "combo-pd-val", onChange);
+  initDualSlider(document.getElementById("combo-lw-range"), comboState, "lw", onChange);
+  initDualSlider(document.getElementById("combo-br-range"), comboState, "br", onChange);
 }
 
 /* ===== Tab 3: 近用瞳距计算 ===== */
@@ -1116,38 +1397,18 @@ function updateNPD() {
   const npd = calcNPD(distPD, viewCm);
   const viewMm = viewCm * 10;
 
+  document.getElementById("npd-label").textContent = t("tab3.npdLabel");
   document.getElementById("npd-result").textContent = npd.toFixed(1);
   document.getElementById("npd-formula-instance").textContent =
-    `NPD = ${distPD} × (${viewMm} − 12) / (${viewMm} + 13) = ${npd.toFixed(1)}mm`;
+    t(" ", distPD, viewMm, npd.toFixed(1));
 }
 
 function initTab3() {
   const onChange = updateNPD;
   bindSlider("npd-dist-pd", "npd-dist-pd-val", onChange);
   bindSlider("npd-distance", "npd-distance-val", onChange);
-
-  document.querySelectorAll(".quick-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const d = parseInt(btn.dataset.distance);
-      document.getElementById("npd-distance").value = d;
-      document.getElementById("npd-distance-val").value = d;
-      document.querySelectorAll(".quick-btn").forEach(b => { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); });
-      btn.classList.add("active");
-      btn.setAttribute("aria-pressed", "true");
-      updateNPD();
-    });
-  });
 }
 
-/* ===== 启动 ===== */
-document.addEventListener("DOMContentLoaded", () => {
-  initTabs();
-  initTab1();
-  initTab2();
-  initTab3();
-  updateNPD();
-  updateComboTable();
-});
 </script>
 </body>
 </html>
