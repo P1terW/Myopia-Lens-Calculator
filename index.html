@@ -6,5 +6,175 @@
 <title>镜片边缘厚度计算器</title>
 </head>
 <body>
+<div class="container">
+  <header>
+    <h1>镜片边缘厚度计算器</h1>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" role="tab" data-panel="panel-thickness" aria-selected="true">边缘厚度计算</button>
+    <button class="tab" role="tab" data-panel="panel-combo" aria-selected="false">最佳组合推荐</button>
+    <button class="tab" role="tab" data-panel="panel-npd" aria-selected="false">近用瞳距</button>
+  </nav>
+
+  <!-- Tab 1: 边缘厚度计算 -->
+  <section class="tab-panel active" id="panel-thickness" role="tabpanel">
+    <div class="calc-layout">
+      <div class="inputs card">
+        <h2>输入参数</h2>
+        <div class="slider-group">
+          <label for="power">度数 (S)</label>
+          <div class="slider-row">
+            <input type="range" id="power" min="-12" max="-1" step="0.25" value="-5">
+            <input type="number" id="power-val" min="-12" max="-1" step="0.25" value="-5.00">
+            <span class="unit">D</span>
+          </div>
+        </div>
+        <div class="slider-group">
+          <label for="lens-width">片宽（玉型尺寸）</label>
+          <div class="slider-row">
+            <input type="range" id="lens-width" min="35" max="63" step="1" value="53">
+            <input type="number" id="lens-width-val" min="35" max="63" step="1" value="53">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+        <div class="slider-group">
+          <label for="bridge">中梁宽（鼻梁距）</label>
+          <div class="slider-row">
+            <input type="range" id="bridge" min="10" max="25" step="1" value="18">
+            <input type="number" id="bridge-val" min="10" max="25" step="1" value="18">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+        <div class="slider-group">
+          <label for="pd">瞳距 (PD)</label>
+          <div class="slider-row">
+            <input type="range" id="pd" min="50" max="72" step="0.5" value="64">
+            <input type="number" id="pd-val" min="50" max="72" step="0.5" value="64">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="results card">
+        <h2>计算结果</h2>
+        <div class="calc-detail">
+          <p class="fd-line">镜框几何中心距 FD = <span id="fd-val">124</span>mm</p>
+          <p class="decent-line">水平移心（单眼）= <span id="decent-val">30</span>mm</p>
+          <p class="edge-dist">中心到边缘距离 = <strong id="edge-dist-val">30</strong>mm</p>
+        </div>
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>折射率 / 设计</th>
+              <th>中心厚</th>
+              <th>边缘厚</th>
+            </tr>
+          </thead>
+          <tbody id="thickness-results">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tab 2: 最佳组合推荐 -->
+  <section class="tab-panel" id="panel-combo" role="tabpanel">
+    <div class="calc-layout">
+      <div class="inputs card">
+        <h2>输入参数</h2>
+        <div class="slider-group">
+          <label for="combo-power">度数 (S)</label>
+          <div class="slider-row">
+            <input type="range" id="combo-power" min="-12" max="-1" step="0.25" value="-5">
+            <input type="number" id="combo-power-val" min="-12" max="-1" step="0.25" value="-5.00">
+            <span class="unit">D</span>
+          </div>
+        </div>
+        <div class="slider-group">
+          <label for="combo-pd">瞳距 (PD)</label>
+          <div class="slider-row">
+            <input type="range" id="combo-pd" min="50" max="72" step="0.5" value="64">
+            <input type="number" id="combo-pd-val" min="50" max="72" step="0.5" value="64">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="results card">
+        <h2>最佳组合 (按边缘厚度升序)</h2>
+        <p class="combo-note">片宽范围 35–63mm，中梁宽范围 10–25mm，共 <span id="combo-total">0</span> 种组合</p>
+        <div class="table-scroll">
+          <table class="combo-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>片宽</th>
+                <th>中梁宽</th>
+                <th>框中心距</th>
+                <th>中心到边距</th>
+                <th>1.74 边缘厚</th>
+                <th>1.67 边缘厚</th>
+                <th>1.60 边缘厚</th>
+              </tr>
+            </thead>
+            <tbody id="combo-results">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tab 3: 近用瞳距计算 -->
+  <section class="tab-panel" id="panel-npd" role="tabpanel">
+    <div class="calc-layout">
+      <div class="inputs card">
+        <h2>输入参数</h2>
+        <div class="slider-group">
+          <label for="npd-dist-pd">远用瞳距 (PD)</label>
+          <div class="slider-row">
+            <input type="range" id="npd-dist-pd" min="50" max="72" step="0.5" value="65">
+            <input type="number" id="npd-dist-pd-val" min="50" max="72" step="0.5" value="65">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+        <div class="slider-group">
+          <label for="npd-distance">视近距离</label>
+          <div class="slider-row">
+            <input type="range" id="npd-distance" min="25" max="50" step="1" value="40">
+            <input type="number" id="npd-distance-val" min="25" max="50" step="1" value="40">
+            <span class="unit">cm</span>
+          </div>
+        </div>
+        <div class="quick-buttons">
+          <span class="quick-label">快捷设定：</span>
+          <button class="quick-btn" data-distance="40">40cm</button>
+          <button class="quick-btn active" data-distance="30">30cm</button>
+          <button class="quick-btn" data-distance="25">25cm</button>
+        </div>
+      </div>
+
+      <div class="results card npd-results">
+        <h2>计算结果</h2>
+        <div class="npd-big">
+          <span class="npd-label">近用瞳距 NPD = </span>
+          <span class="npd-value" id="npd-result">61.2</span>
+          <span class="npd-unit">mm</span>
+        </div>
+        <div class="npd-formula card-inner">
+          <p class="formula-text">NPD = 远用PD × (距离 − 12) / (距离 + 13)</p>
+          <p class="formula-sub" id="npd-formula-instance">NPD = 65 × (400 − 12) / (400 + 13) = 61.2mm</p>
+        </div>
+        <div class="npd-hints">
+          <span class="hint-label">简易系数：</span>
+          <span>40cm → ×0.94</span>
+          <span>30cm → ×0.93</span>
+          <span>25cm → ×0.91</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 </body>
 </html>
