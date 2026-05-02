@@ -544,5 +544,365 @@ input[type="number"] { -moz-appearance: textfield; }
     </div>
   </section>
 </main>
+<script>
+/* ===== 塑料镜片厚度数据 ===== */
+const THICKNESS_DATA = {
+  "-1.00": {
+    "1.74 非球面": { center: 1.5, d20: 1.8, d25: 1.9, d30: 2.1, d35: 2.4 },
+    "1.70 非球面": { center: 1.4, d20: 1.7, d25: 1.9, d30: 2.1, d35: 2.3 },
+    "1.67 非球面": { center: 1.4, d20: 1.7, d25: 1.9, d30: 2.0, d35: 2.2 },
+    "1.60 非球面": { center: 1.2, d20: 1.5, d25: 1.7, d30: 2.0, d35: 2.2 },
+    "1.60 球面":   { center: 1.5, d20: 1.8, d25: 2.0, d30: 2.3, d35: 2.6 },
+    "1.50 非球面": { center: 1.6, d20: 1.8, d25: 2.1, d30: 2.3, d35: 2.7 },
+    "1.50 球面":   { center: 1.8, d20: 2.2, d25: 2.4, d30: 2.8, d35: 3.1 }
+  },
+  "-2.00": {
+    "1.74 非球面": { center: 1.1, d20: 1.7, d25: 2.0, d30: 2.4, d35: 2.8 },
+    "1.70 非球面": { center: 1.0, d20: 1.6, d25: 1.9, d30: 2.3, d35: 2.8 },
+    "1.67 非球面": { center: 1.1, d20: 1.7, d25: 2.0, d30: 2.4, d35: 2.8 },
+    "1.60 非球面": { center: 1.1, d20: 1.8, d25: 2.1, d30: 2.5, d35: 3.0 },
+    "1.60 球面":   { center: 1.3, d20: 2.0, d25: 2.4, d30: 2.9, d35: 3.5 },
+    "1.50 非球面": { center: 1.6, d20: 2.1, d25: 2.7, d30: 3.2, d35: 4.0 },
+    "1.50 球面":   { center: 1.8, d20: 2.6, d25: 3.1, d30: 3.7, d35: 4.5 }
+  },
+  "-3.00": {
+    "1.74 非球面": { center: 1.0, d20: 1.8, d25: 2.3, d30: 2.8, d35: 3.5 },
+    "1.70 非球面": { center: 1.0, d20: 1.8, d25: 2.3, d30: 2.9, d35: 3.5 },
+    "1.67 非球面": { center: 1.1, d20: 2.0, d25: 2.5, d30: 3.1, d35: 3.7 },
+    "1.60 非球面": { center: 1.1, d20: 2.1, d25: 2.7, d30: 3.3, d35: 4.1 },
+    "1.60 球面":   { center: 1.3, d20: 2.3, d25: 2.9, d30: 3.6, d35: 4.5 },
+    "1.50 非球面": { center: 1.4, d20: 2.5, d25: 3.3, d30: 4.1, d35: 5.3 },
+    "1.50 球面":   { center: 1.8, d20: 3.0, d25: 3.8, d30: 4.7, d35: 5.8 }
+  },
+  "-4.00": {
+    "1.74 非球面": { center: 1.0, d20: 2.1, d25: 2.7, d30: 3.5, d35: 4.4 },
+    "1.70 非球面": { center: 1.0, d20: 2.1, d25: 2.7, d30: 3.5, d35: 4.4 },
+    "1.67 非球面": { center: 1.1, d20: 2.3, d25: 2.9, d30: 3.7, d35: 4.7 },
+    "1.60 非球面": { center: 1.1, d20: 2.4, d25: 3.2, d30: 4.0, d35: 5.0 },
+    "1.60 球面":   { center: 1.1, d20: 2.5, d25: 3.2, d30: 4.2, d35: 5.4 },
+    "1.50 非球面": { center: 1.4, d20: 2.8, d25: 3.9, d30: 5.1, d35: 6.6 },
+    "1.50 球面":   { center: 1.8, d20: 3.5, d25: 4.4, d30: 5.7, d35: 7.2 }
+  },
+  "-5.00": {
+    "1.74 非球面": { center: 1.0, d20: 2.4, d25: 3.1, d30: 4.1, d35: 5.2 },
+    "1.70 非球面": { center: 1.0, d20: 2.4, d25: 3.2, d30: 4.1, d35: 5.3 },
+    "1.67 非球面": { center: 1.1, d20: 2.6, d25: 3.4, d30: 4.4, d35: 5.6 },
+    "1.60 非球面": { center: 1.1, d20: 2.8, d25: 3.7, d30: 4.8, d35: 6.1 },
+    "1.60 球面":   { center: 1.1, d20: 2.8, d25: 3.8, d30: 5.0, d35: 6.5 },
+    "1.50 非球面": { center: 1.4, d20: 3.2, d25: 4.5, d30: 6.0, d35: 7.9 },
+    "1.50 球面":   { center: 1.8, d20: 3.9, d25: 5.1, d30: 6.6, d35: 8.5 }
+  },
+  "-6.00": {
+    "1.74 非球面": { center: 1.0, d20: 2.6, d25: 3.6, d30: 4.7, d35: 6.1 },
+    "1.70 非球面": { center: 1.0, d20: 2.7, d25: 3.6, d30: 4.8, d35: 6.1 },
+    "1.67 非球面": { center: 1.1, d20: 2.9, d25: 3.9, d30: 5.1, d35: 6.5 },
+    "1.60 非球面": { center: 1.1, d20: 3.1, d25: 4.2, d30: 5.6, d35: 7.2 },
+    "1.60 球面":   { center: 1.1, d20: 3.1, d25: 4.3, d30: 5.8, d35: 7.6 },
+    "1.50 非球面": { center: 1.4, d20: 3.5, d25: 5.1, d30: 6.9, d35: 9.2 },
+    "1.50 球面":   { center: 1.8, d20: 4.3, d25: 5.8, d30: 7.7, d35: 10.1 }
+  },
+  "-7.00": {
+    "1.74 非球面": { center: 1.0, d20: 2.9, d25: 4.0, d30: 5.4, d35: 7.0 },
+    "1.70 非球面": { center: 1.0, d20: 3.0, d25: 4.1, d30: 5.5, d35: 7.1 },
+    "1.67 非球面": { center: 1.1, d20: 3.0, d25: 4.4, d30: 5.9, d35: 7.6 },
+    "1.60 非球面": { center: 1.1, d20: 3.5, d25: 4.8, d30: 6.4, d35: 8.2 },
+    "1.60 球面":   { center: 1.1, d20: 3.5, d25: 4.9, d30: 6.6, d35: 8.8 }
+  },
+  "-8.00": {
+    "1.74 非球面": { center: 1.0, d20: 3.2, d25: 4.5, d30: 6.0, d35: 7.9 },
+    "1.70 非球面": { center: 1.0, d20: 3.3, d25: 4.6, d30: 6.2, d35: 8.1 },
+    "1.67 非球面": { center: 1.1, d20: 3.5, d25: 4.9, d30: 6.6, d35: 8.7 },
+    "1.60 非球面": { center: 1.1, d20: 3.8, d25: 5.4, d30: 7.3, d35: 9.7 },
+    "1.60 球面":   { center: 1.1, d20: 3.8, d25: 5.5, d30: 7.5, d35: 10.1 }
+  },
+  "-9.00": {
+    "1.74 非球面": { center: 1.0, d20: 3.5, d25: 4.9, d30: 6.7, d35: 8.9 },
+    "1.70 非球面": { center: 1.0, d20: 3.6, d25: 5.1, d30: 6.9, d35: 9.1 },
+    "1.67 非球面": { center: 1.1, d20: 3.8, d25: 5.4, d30: 7.4, d35: 9.8 },
+    "1.60 非球面": { center: 1.1, d20: 4.2, d25: 6.0, d30: 8.3, d35: 11.2 },
+    "1.60 球面":   { center: 1.1, d20: 4.2, d25: 6.0, d30: 8.3, d35: 11.2 }
+  },
+  "-10.00": {
+    "1.74 非球面": { center: 1.0, d20: 3.8, d25: 5.4, d30: 7.4, d35: 9.9 },
+    "1.70 非球面": { center: 1.0, d20: 3.9, d25: 5.6, d30: 7.6, d35: 10.2 },
+    "1.67 非球面": { center: 1.1, d20: 4.2, d25: 5.9, d30: 8.2, d35: 11.0 },
+    "1.60 非球面": { center: 1.1, d20: 4.5, d25: 6.5, d30: 9.0, d35: 11.9 },
+    "1.60 球面":   { center: 1.1, d20: 4.5, d25: 6.6, d30: 9.2, d35: 12.6 }
+  },
+  "-11.00": {
+    "1.74 非球面": { center: 1.0, d20: 4.1, d25: 5.9, d30: 8.3, d35: 10.9 },
+    "1.70 非球面": { center: 1.0, d20: 4.2, d25: 6.1, d30: 8.5, d35: 11.3 },
+    "1.67 非球面": { center: 1.1, d20: 4.5, d25: 6.5, d30: 9.0, d35: 12.2 },
+    "1.60 非球面": { center: 1.1, d20: 4.9, d25: 7.1, d30: 9.9, d35: 13.1 },
+    "1.60 球面":   { center: 1.1, d20: 4.9, d25: 7.2, d30: 10.1, d35: 13.9 }
+  },
+  "-12.00": {
+    "1.74 非球面": { center: 1.0, d20: 4.5, d25: 6.4, d30: 9.1, d35: 12.0 },
+    "1.70 非球面": { center: 1.0, d20: 4.6, d25: 6.6, d30: 9.4, d35: 12.5 },
+    "1.67 非球面": { center: 1.1, d20: 5.0, d25: 7.1, d30: 9.9, d35: 13.5 },
+    "1.60 非球面": { center: 1.1, d20: 5.3, d25: 7.7, d30: 10.8, d35: 14.5 },
+    "1.60 球面":   { center: 1.1, d20: 5.3, d25: 7.8, d30: 11.0, d35: 15.3 }
+  }
+};
+
+const LENS_ORDER = [
+  "1.74 非球面",
+  "1.70 非球面",
+  "1.67 非球面",
+  "1.60 非球面",
+  "1.60 球面",
+  "1.50 非球面",
+  "1.50 球面"
+];
+
+const POWER_NODES = Object.keys(THICKNESS_DATA)
+  .map(Number)
+  .sort((a, b) => a - b);
+
+const DIST_NODES = [20, 25, 30, 35];
+
+/* ===== 计算引擎 ===== */
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function findInterval(nodes, value) {
+  if (value <= nodes[0]) return { lo: nodes[0], hi: nodes[0], t: 0 };
+  if (value >= nodes[nodes.length - 1]) {
+    const last = nodes[nodes.length - 1];
+    return { lo: last, hi: last, t: 0 };
+  }
+  for (let i = 0; i < nodes.length - 1; i++) {
+    if (value >= nodes[i] && value <= nodes[i + 1]) {
+      const t = (value - nodes[i]) / (nodes[i + 1] - nodes[i]);
+      return { lo: nodes[i], hi: nodes[i + 1], t };
+    }
+  }
+  return { lo: nodes[0], hi: nodes[0], t: 0 };
+}
+
+function getEdgeThickness(power, lensType, distance) {
+  const pInt = findInterval(POWER_NODES, Math.abs(power));
+  const loKey = pInt.lo.toFixed(2);
+  const hiKey = pInt.hi.toFixed(2);
+  const dataLo = THICKNESS_DATA[loKey] ? (THICKNESS_DATA[loKey][lensType] || null) : null;
+  const dataHi = THICKNESS_DATA[hiKey] ? (THICKNESS_DATA[hiKey][lensType] || null) : null;
+  if (!dataLo && !dataHi) return null;
+
+  const dInt = findInterval(DIST_NODES, distance);
+
+  function thickAtDist(data) {
+    if (!data) return null;
+    const dKeyLo = "d" + dInt.lo;
+    const dKeyHi = "d" + dInt.hi;
+    return lerp(data[dKeyLo], data[dKeyHi], dInt.t);
+  }
+
+  const tLo = thickAtDist(dataLo);
+  const tHi = thickAtDist(dataHi);
+  if (tLo == null && tHi == null) return null;
+  if (tLo == null) return tHi;
+  if (tHi == null) return tLo;
+  return lerp(tLo, tHi, pInt.t);
+}
+
+function getCenterThickness(power, lensType) {
+  const pInt = findInterval(POWER_NODES, Math.abs(power));
+  const loKey = pInt.lo.toFixed(2);
+  const hiKey = pInt.hi.toFixed(2);
+  const cLo = THICKNESS_DATA[loKey]?.[lensType]?.center;
+  const cHi = THICKNESS_DATA[hiKey]?.[lensType]?.center;
+  if (cLo == null && cHi == null) return null;
+  if (cLo == null) return cHi;
+  if (cHi == null) return cLo;
+  return lerp(cLo, cHi, pInt.t);
+}
+
+function calcEdgeDistance(lensWidth, bridge, pd) {
+  const fd = lensWidth * 2 + bridge;
+  return (fd - pd) / 2;
+}
+
+function getAllThicknesses(power, lensWidth, bridge, pd) {
+  const edgeDist = calcEdgeDistance(lensWidth, bridge, pd);
+  const fd = lensWidth * 2 + bridge;
+  const rows = [];
+  for (const lt of LENS_ORDER) {
+    const center = getCenterThickness(power, lt);
+    const edge = getEdgeThickness(power, lt, edgeDist);
+    if (center != null && edge != null) {
+      rows.push({ lensType: lt, center, edge });
+    }
+  }
+  return { fd, decent: edgeDist, edgeDist, rows };
+}
+
+/* ===== 标签页切换 ===== */
+function initTabs() {
+  const tabs = document.querySelectorAll(".tab");
+  const panels = document.querySelectorAll(".tab-panel");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      const panelId = tab.dataset.panel;
+      tabs.forEach(t => { t.classList.remove("active"); t.setAttribute("aria-selected", "false"); });
+      panels.forEach(p => { p.classList.remove("active"); p.setAttribute("hidden", ""); });
+      tab.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+      const panel = document.getElementById(panelId);
+      panel.classList.add("active");
+      panel.removeAttribute("hidden");
+    });
+  });
+}
+
+/* ===== Tab 1: 边缘厚度计算 ===== */
+function bindSlider(idRange, idNum, onChange) {
+  const range = document.getElementById(idRange);
+  const num = document.getElementById(idNum);
+
+  range.addEventListener("input", () => {
+    num.value = parseFloat(range.value).toFixed(
+      range.step.includes("0.5") || range.step.includes("0.25") ? 2 : 0
+    );
+    onChange();
+  });
+
+  num.addEventListener("change", () => {
+    let v = parseFloat(num.value);
+    if (isNaN(v)) return;
+    v = Math.max(parseFloat(range.min), Math.min(parseFloat(range.max), v));
+    num.value = v;
+    range.value = v;
+    onChange();
+  });
+}
+
+function updateThicknessTable() {
+  const power = parseFloat(document.getElementById("power").value);
+  const lensWidth = parseInt(document.getElementById("lens-width").value);
+  const bridge = parseInt(document.getElementById("bridge").value);
+  const pd = parseFloat(document.getElementById("pd").value);
+
+  const result = getAllThicknesses(power, lensWidth, bridge, pd);
+
+  document.getElementById("fd-val").textContent = result.fd;
+  document.getElementById("decent-val").textContent = result.decent.toFixed(1);
+  document.getElementById("edge-dist-val").textContent = result.edgeDist.toFixed(1);
+
+  const tbody = document.getElementById("thickness-results");
+  const minEdge = Math.min(...result.rows.map(r => r.edge));
+
+  tbody.innerHTML = result.rows.map(r => {
+    const isThinnest = r.edge === minEdge;
+    return `<tr class="${isThinnest ? "thinnest-row" : ""}">
+      <td>${r.lensType}</td>
+      <td>${r.center.toFixed(1)}mm</td>
+      <td>${r.edge.toFixed(1)}mm${isThinnest ? " ◀ 最薄" : ""}</td>
+    </tr>`;
+  }).join("");
+}
+
+function initTab1() {
+  const onChange = updateThicknessTable;
+  bindSlider("power", "power-val", onChange);
+  bindSlider("lens-width", "lens-width-val", onChange);
+  bindSlider("bridge", "bridge-val", onChange);
+  bindSlider("pd", "pd-val", onChange);
+  onChange();
+}
+
+/* ===== Tab 2: 最佳组合推荐 ===== */
+function updateComboTable() {
+  const power = parseFloat(document.getElementById("combo-power").value);
+  const pd = parseFloat(document.getElementById("combo-pd").value);
+
+  const combos = [];
+  for (let lw = 35; lw <= 63; lw++) {
+    for (let br = 10; br <= 25; br++) {
+      const fd = lw * 2 + br;
+      const edgeDist = (fd - pd) / 2;
+      const t174 = getEdgeThickness(power, "1.74 非球面", edgeDist);
+      const t167 = getEdgeThickness(power, "1.67 非球面", edgeDist);
+      const t160 = getEdgeThickness(power, "1.60 非球面", edgeDist);
+      if (t174 != null) {
+        combos.push({ lensWidth: lw, bridge: br, fd, edgeDist, t174, t167, t160 });
+      }
+    }
+  }
+
+  combos.sort((a, b) => a.t174 - b.t174);
+
+  document.getElementById("combo-total").textContent = combos.length;
+
+  const tbody = document.getElementById("combo-results");
+  const display = combos.slice(0, 50);
+
+  tbody.innerHTML = display.map((c, i) => {
+    const cls = i < 5 ? "top-row" : "";
+    return `<tr class="${cls}">
+      <td>${i + 1}</td>
+      <td>${c.lensWidth}</td>
+      <td>${c.bridge}</td>
+      <td>${c.fd}</td>
+      <td>${c.edgeDist.toFixed(1)}</td>
+      <td>${c.t174.toFixed(1)}</td>
+      <td>${c.t167.toFixed(1)}</td>
+      <td>${c.t160.toFixed(1)}</td>
+    </tr>`;
+  }).join("");
+}
+
+function initTab2() {
+  const onChange = updateComboTable;
+  bindSlider("combo-power", "combo-power-val", onChange);
+  bindSlider("combo-pd", "combo-pd-val", onChange);
+}
+
+/* ===== Tab 3: 近用瞳距计算 ===== */
+function calcNPD(distancePD, viewDistanceCm) {
+  const viewDistanceMm = viewDistanceCm * 10;
+  return (distancePD * (viewDistanceMm - 12)) / (viewDistanceMm + 13);
+}
+
+function updateNPD() {
+  const distPD = parseFloat(document.getElementById("npd-dist-pd").value);
+  const viewCm = parseInt(document.getElementById("npd-distance").value);
+  const npd = calcNPD(distPD, viewCm);
+  const viewMm = viewCm * 10;
+
+  document.getElementById("npd-result").textContent = npd.toFixed(1);
+  document.getElementById("npd-formula-instance").textContent =
+    `NPD = ${distPD} × (${viewMm} − 12) / (${viewMm} + 13) = ${npd.toFixed(1)}mm`;
+}
+
+function initTab3() {
+  const onChange = updateNPD;
+  bindSlider("npd-dist-pd", "npd-dist-pd-val", onChange);
+  bindSlider("npd-distance", "npd-distance-val", onChange);
+
+  document.querySelectorAll(".quick-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const d = parseInt(btn.dataset.distance);
+      document.getElementById("npd-distance").value = d;
+      document.getElementById("npd-distance-val").value = d;
+      document.querySelectorAll(".quick-btn").forEach(b => { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); });
+      btn.classList.add("active");
+      btn.setAttribute("aria-pressed", "true");
+      updateNPD();
+    });
+  });
+}
+
+/* ===== 启动 ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  initTabs();
+  initTab1();
+  initTab2();
+  initTab3();
+  updateNPD();
+  updateComboTable();
+});
+</script>
 </body>
 </html>
