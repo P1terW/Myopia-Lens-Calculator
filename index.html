@@ -731,19 +731,19 @@ input[type="number"] { -moz-appearance: textfield; }
             <option value="ab" data-i18n="optical.modeAb">片宽 + 中梁</option>
           </select>
         </div>
-        <div class="slider-group">
+        <div class="slider-group min-fcd-only">
           <label for="min-fcd">FCD</label>
           <div class="slider-row"><input type="range" id="min-fcd" min="50" max="90" step="1" value="70"><input type="number" id="min-fcd-val" min="50" max="90" step="1" value="70"><span class="unit">mm</span></div>
         </div>
-        <div class="slider-group">
+        <div class="slider-group min-fcd-only">
           <label for="min-ed">ED</label>
           <div class="slider-row"><input type="range" id="min-ed" min="40" max="80" step="1" value="55"><input type="number" id="min-ed-val" min="40" max="80" step="1" value="55"><span class="unit">mm</span></div>
         </div>
-        <div class="slider-group">
+        <div class="slider-group min-ab-only">
           <label for="min-width" data-i18n="common.lensWidth">镜框的镜片宽度</label>
           <div class="slider-row"><input type="range" id="min-width" min="30" max="70" step="1" value="52"><input type="number" id="min-width-val" min="30" max="70" step="1" value="52"><span class="unit">mm</span></div>
         </div>
-        <div class="slider-group">
+        <div class="slider-group min-ab-only">
           <label for="min-bridge" data-i18n="common.bridge">镜框的中梁宽度</label>
           <div class="slider-row"><input type="range" id="min-bridge" min="10" max="30" step="1" value="18"><input type="number" id="min-bridge-val" min="10" max="30" step="1" value="18"><span class="unit">mm</span></div>
         </div>
@@ -923,7 +923,7 @@ const I18N = {
       minDiameter: "最小加工直径", recut: "旧片移装风险", transpose: "柱镜转写",
       oldWidth: "旧框片宽", oldBridge: "旧框中梁", newWidth: "新框片宽", newBridge: "新框中梁",
       minMode: "计算方式", modeFcd: "FCD + ED", modeAb: "片宽 + 中梁",
-      suggestedDiameter: "建议标准直径", shift: "单眼移心量", risk: "风险等级",
+      suggestedDiameter: "建议标准直径", shift: "单眼移心量", risk: "移装风险等级",
       newPd: "移装后新瞳距", pdError: "瞳距误差", prism: "棱镜效应", transResult: "转写结果"
     },
     pres: {
@@ -1779,8 +1779,12 @@ function transposeRx(sphere, cylinder, axis) {
 }
 
 function updateOpticalTools() {
+  const minMode = document.getElementById("min-mode").value;
+  document.querySelectorAll(".min-fcd-only").forEach(el => { el.style.display = minMode === "fcd" ? "" : "none"; });
+  document.querySelectorAll(".min-ab-only").forEach(el => { el.style.display = minMode === "ab" ? "" : "none"; });
+
   const min = calculateMinDiameter(
-    document.getElementById("min-mode").value,
+    minMode,
     parseFloat(document.getElementById("min-fcd").value),
     parseFloat(document.getElementById("min-ed").value),
     parseFloat(document.getElementById("min-width").value),
