@@ -15,7 +15,6 @@
   --accent: #2563eb;
   --accent-light: #dbeafe;
   --highlight: #f59e0b;
-  --highlight-bg: #fefce8;
   --border: #e5e7eb;
   --radius-card: 12px;
   --radius-btn: 8px;
@@ -33,7 +32,6 @@
   --accent: #5b8def;
   --accent-light: #1e3050;
   --highlight: #f0c040;
-  --highlight-bg: #2a2818;
   --border: #3a3a55;
   --shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
@@ -41,9 +39,7 @@
 [data-theme="dark"] input[type="number"] { background: #333355; color: var(--text); border-color: var(--border); }
 [data-theme="dark"] input[type="range"]::-webkit-slider-thumb { background: #333355; }
 [data-theme="dark"] input[type="range"]::-moz-range-thumb { background: #333355; }
-[data-theme="dark"] .dual-thumb { background: #333355; }
 [data-theme="dark"] .results-table tbody tr:hover { background: #2a2a45; }
-[data-theme="dark"] .combo-table .top-row { background: var(--highlight-bg); }
 
 /* === Reset === */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -261,60 +257,6 @@ input[type="number"] { -moz-appearance: textfield; }
   width: 24px;
 }
 
-/* === Dual Range Slider === */
-.dual-slider {
-  position: relative;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  touch-action: none;
-}
-
-.dual-track {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-}
-
-.dual-fill {
-  position: absolute;
-  height: 4px;
-  background: var(--accent);
-  border-radius: 2px;
-}
-
-.dual-thumb {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid var(--accent);
-  top: 50%;
-  transform: translate(-50%, -50%);
-  cursor: grab;
-  transition: width 0.15s, height 0.15s;
-}
-
-.dual-thumb:hover, .dual-thumb:active { width: 24px; height: 24px; }
-
-.dual-values {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.85rem;
-  font-variant-numeric: tabular-nums;
-  margin-top: 2px;
-}
-
-.dual-val-lo, .dual-val-hi {
-  color: var(--text);
-  font-weight: 500;
-}
-
 /* === Results Area === */
 .calc-detail {
   margin-bottom: 20px;
@@ -342,13 +284,13 @@ input[type="number"] { -moz-appearance: textfield; }
 }
 
 /* === Results Table === */
-.results-table, .combo-table {
+.results-table {
   width: 100%;
   border-collapse: collapse;
   font-variant-numeric: tabular-nums;
 }
 
-.results-table th, .combo-table th {
+.results-table th {
   text-align: left;
   padding: 8px 12px;
   border-bottom: 2px solid var(--border);
@@ -358,23 +300,13 @@ input[type="number"] { -moz-appearance: textfield; }
   white-space: nowrap;
 }
 
-.results-table td, .combo-table td {
+.results-table td {
   padding: 10px 12px;
   border-bottom: 1px solid var(--border);
   font-size: 0.9rem;
 }
 
 .results-table tbody tr:hover { background: #f8fafc; }
-
-/* === Combo Table (Tab 2) === */
-.table-scroll { overflow-x: auto; }
-
-.combo-table { font-size: 0.85rem; }
-
-.combo-table .top-row {
-  background: var(--highlight-bg);
-  font-weight: 600;
-}
 
 /* === NPD Result === */
 .npd-big {
@@ -401,6 +333,91 @@ input[type="number"] { -moz-appearance: textfield; }
 .npd-formula .formula-sub {
   font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
+}
+
+/* === Compact tool panels === */
+.select-input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  background: var(--card-bg);
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-btn);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metric {
+  background: var(--card-inner-bg);
+  border-radius: 8px;
+  padding: 14px;
+  min-width: 0;
+}
+
+.metric-label {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  display: block;
+  color: var(--accent);
+  font-size: 1.4rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.risk-safe .metric-value { color: #16a34a; }
+.risk-warn .metric-value { color: #d97706; }
+.risk-danger .metric-value, .risk-fail .metric-value { color: #dc2626; }
+
+.tool-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0;
+}
+
+.hint {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  margin-top: 8px;
+}
+
+.lens-canvas-wrap {
+  margin-top: 16px;
+  background: var(--card-inner-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.lens-canvas {
+  display: block;
+  width: 100%;
+  height: 240px;
 }
 
 /* === Responsive === */
@@ -450,11 +467,6 @@ input[type="number"] { -moz-appearance: textfield; }
   }
   .unit { font-size: 0.72rem; width: 20px; }
 
-  /* Dual slider: bigger thumbs for touch */
-  .dual-thumb { width: 26px; height: 26px; }
-  .dual-track, .dual-fill { height: 6px; }
-  .dual-slider { height: 36px; }
-
   /* Calc detail */
   .calc-detail { padding: 12px 14px; font-size: 0.85rem; margin-bottom: 14px; }
   .edge-dist strong { font-size: 1.1rem; }
@@ -463,21 +475,6 @@ input[type="number"] { -moz-appearance: textfield; }
   .results-table th { padding: 8px 6px; font-size: 0.7rem; white-space: normal; line-height: 1.25; }
   .results-table td { padding: 9px 6px; font-size: 0.8rem; }
 
-  /* Tab 2 combo table: scroll horizontally, allow header wrap */
-  .table-scroll {
-    margin: 0 -12px;
-    padding: 0 12px;
-  }
-  .combo-table { font-size: 0.78rem; min-width: 480px; }
-  .combo-table th {
-    padding: 6px 5px;
-    font-size: 0.68rem;
-    white-space: normal;
-    line-height: 1.25;
-  }
-  .combo-table td { padding: 7px 5px; }
-  .combo-note { font-size: 0.78rem; margin-bottom: 10px; }
-
   /* NPD: stack label above value */
   .npd-big { padding: 18px 0 12px; font-size: 0.85rem; }
   .npd-label { display: block; color: var(--text-secondary); margin-bottom: 4px; }
@@ -485,6 +482,8 @@ input[type="number"] { -moz-appearance: textfield; }
   .npd-unit { font-size: 1.1rem; }
   .npd-formula .formula-text,
   .npd-formula .formula-sub { font-size: 0.78rem; word-break: break-word; }
+  .result-grid { grid-template-columns: 1fr; gap: 10px; }
+  .lens-canvas { height: 210px; }
 }
 
 @media (max-width: 480px) {
@@ -518,6 +517,24 @@ input[type="number"] { -moz-appearance: textfield; }
   text-underline-offset: 2px;
 }
 .info a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+.info .sources { margin: 0 0 10px; }
+.info .disclaimer {
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 0.68rem;
+  line-height: 1.7;
+  opacity: 0.85;
+}
+.tip-box {
+  background: var(--card-inner-bg);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
 </style>
 </head>
 <body>
@@ -533,7 +550,10 @@ input[type="number"] { -moz-appearance: textfield; }
 
   <nav class="tabs" role="tablist">
     <button class="tab active" role="tab" id="tab-thickness" aria-controls="panel-thickness" data-panel="panel-thickness" aria-selected="true" data-i18n="tabs.thickness">边缘厚度计算</button>
-    <button class="tab" role="tab" id="tab-combo" aria-controls="panel-combo" data-panel="panel-combo" aria-selected="false" data-i18n="tabs.combo">最佳组合推荐</button>
+    <button class="tab" role="tab" id="tab-geo" aria-controls="panel-geo" data-panel="panel-geo" aria-selected="false" data-i18n="tabs.geo">几何厚度</button>
+    <button class="tab" role="tab" id="tab-contact" aria-controls="panel-contact" data-panel="panel-contact" aria-selected="false" data-i18n="tabs.contact">隐形换算</button>
+    <button class="tab" role="tab" id="tab-optical" aria-controls="panel-optical" data-panel="panel-optical" aria-selected="false" data-i18n="tabs.optical">配镜工具</button>
+    <button class="tab" role="tab" id="tab-presbyopia" aria-controls="panel-presbyopia" data-panel="panel-presbyopia" aria-selected="false" data-i18n="tabs.presbyopia">老花方案</button>
     <button class="tab" role="tab" id="tab-npd" aria-controls="panel-npd" data-panel="panel-npd" aria-selected="false" data-i18n="tabs.npd">近用瞳距</button>
   </nav>
 
@@ -542,11 +562,12 @@ input[type="number"] { -moz-appearance: textfield; }
     <div class="calc-layout">
       <div class="inputs card">
         <h2 data-i18n="common.inputParams">输入参数</h2>
+        <p class="tip-box" data-i18n="tab1.frameTip">镜框尺寸一般刻在镜腿内侧，形如 53□17-140：其中 53 是镜片宽度，17 是中梁宽度，140 是镜腿长度，依此类推。此外，方形镜框配出的镜片边缘通常比圆润镜框更厚。</p>
         <div class="slider-group">
           <label for="power" data-i18n="common.power">最高单眼近视度数（不含散光）</label>
           <div class="slider-row">
-            <input type="range" id="power" min="-12" max="-1" step="0.25" value="-5">
-            <input type="number" id="power-val" min="-12" max="-1" step="0.25" value="-5.00">
+            <input type="range" id="power" min="-20" max="-1" step="0.25" value="-5">
+            <input type="number" id="power-val" min="-20" max="-1" step="0.25" value="-5.00">
             <span class="unit">D</span>
           </div>
         </div>
@@ -599,76 +620,212 @@ input[type="number"] { -moz-appearance: textfield; }
     </div>
   </section>
 
-  <!-- Tab 2: 最佳组合推荐 -->
-  <section class="tab-panel" id="panel-combo" role="tabpanel" aria-labelledby="tab-combo" hidden>
+  <!-- Tab 3: 几何厚度模型 -->
+  <section class="tab-panel" id="panel-geo" role="tabpanel" aria-labelledby="tab-geo" hidden>
     <div class="calc-layout">
       <div class="inputs card">
         <h2 data-i18n="common.inputParams">输入参数</h2>
         <div class="slider-group">
-          <label for="combo-power" data-i18n="common.powerShort">度数 (S)</label>
+          <label for="geo-index" data-i18n="geo.index">折射率</label>
+          <select id="geo-index" class="select-input">
+            <option value="1.50">1.50</option>
+            <option value="1.56">1.56</option>
+            <option value="1.60" selected>1.60</option>
+            <option value="1.67">1.67</option>
+            <option value="1.71">1.71</option>
+            <option value="1.74">1.74</option>
+            <option value="1.80">1.80</option>
+          </select>
+        </div>
+        <div class="slider-group">
+          <label for="geo-power" data-i18n="common.powerShort">度数 (S)</label>
           <div class="slider-row">
-            <input type="range" id="combo-power" min="-12" max="-1" step="0.25" value="-5">
-            <input type="number" id="combo-power-val" min="-12" max="-1" step="0.25" value="-5.00">
+            <input type="range" id="geo-power" min="-20" max="12" step="0.25" value="-5">
+            <input type="number" id="geo-power-val" min="-20" max="12" step="0.25" value="-5.00">
             <span class="unit">D</span>
           </div>
         </div>
         <div class="slider-group">
-          <label for="combo-pd" data-i18n="common.pd">瞳距 (PD)</label>
+          <label for="geo-width" data-i18n="common.lensWidth">镜框的镜片宽度</label>
           <div class="slider-row">
-            <input type="range" id="combo-pd" min="50" max="72" step="0.5" value="64">
-            <input type="number" id="combo-pd-val" min="50" max="72" step="0.5" value="64">
+            <input type="range" id="geo-width" min="42" max="65" step="1" value="54">
+            <input type="number" id="geo-width-val" min="42" max="65" step="1" value="54">
             <span class="unit">mm</span>
           </div>
         </div>
         <div class="slider-group">
-          <label data-i18n="tab2.lwRange">片宽范围</label>
-          <div class="dual-slider" id="combo-lw-range">
-            <div class="dual-track"><div class="dual-fill"></div></div>
-            <div class="dual-thumb dual-thumb-lo"></div>
-            <div class="dual-thumb dual-thumb-hi"></div>
-          </div>
-          <div class="dual-values">
-            <span class="dual-val-lo" id="combo-lw-lo">40</span>
-            <span>–</span>
-            <span class="dual-val-hi" id="combo-lw-hi">60</span>
+          <label for="geo-bridge" data-i18n="common.bridge">镜框的中梁宽度</label>
+          <div class="slider-row">
+            <input type="range" id="geo-bridge" min="14" max="24" step="1" value="17">
+            <input type="number" id="geo-bridge-val" min="14" max="24" step="1" value="17">
             <span class="unit">mm</span>
           </div>
         </div>
         <div class="slider-group">
-          <label data-i18n="tab2.brRange">中梁宽范围</label>
-          <div class="dual-slider" id="combo-br-range">
-            <div class="dual-track"><div class="dual-fill"></div></div>
-            <div class="dual-thumb dual-thumb-lo"></div>
-            <div class="dual-thumb dual-thumb-hi"></div>
+          <label for="geo-pd" data-i18n="common.pd">瞳距 (PD)</label>
+          <div class="slider-row">
+            <input type="range" id="geo-pd" min="42" max="80" step="1" value="62">
+            <input type="number" id="geo-pd-val" min="42" max="80" step="1" value="62">
+            <span class="unit">mm</span>
           </div>
-          <div class="dual-values">
-            <span class="dual-val-lo" id="combo-br-lo">13</span>
-            <span>–</span>
-            <span class="dual-val-hi" id="combo-br-hi">23</span>
+        </div>
+        <div class="slider-group">
+          <label for="geo-tc" data-i18n="geo.tc">中心厚</label>
+          <div class="slider-row">
+            <input type="range" id="geo-tc" min="0.5" max="10" step="0.1" value="1.2">
+            <input type="number" id="geo-tc-val" min="0.5" max="10" step="0.1" value="1.2">
             <span class="unit">mm</span>
           </div>
         </div>
       </div>
-
       <div class="results card">
-        <p class="combo-note" id="combo-note">共 <span id="combo-total">0</span> 种组合</p>
-        <div class="table-scroll">
-          <table class="combo-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th data-i18n="tab2.colLensWidth">片宽</th>
-                <th data-i18n="tab2.colBridge">中梁宽</th>
-                <th data-i18n="tab2.col174">1.74 边缘厚</th>
-                <th data-i18n="tab2.col167">1.67 边缘厚</th>
-                <th data-i18n="tab2.col160">1.60 边缘厚</th>
-                <th data-i18n="tab2.col150">1.50 边缘厚</th>
-              </tr>
-            </thead>
-            <tbody id="combo-results">
-            </tbody>
-          </table>
+        <h2 data-i18n="geo.resultTitle">几何厚度估算</h2>
+        <div class="result-grid" id="geo-results"></div>
+        <div class="lens-canvas-wrap">
+          <canvas class="lens-canvas" id="geo-lens-canvas" width="760" height="360"></canvas>
         </div>
+        <p class="hint" data-i18n="geo.hint">该模型来自曲率矢高估算，适合快速比较，不等同于工厂加工结果。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tab 4: 隐形眼镜换算 -->
+  <section class="tab-panel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact" hidden>
+    <div class="calc-layout">
+      <div class="inputs card">
+        <h2 data-i18n="common.inputParams">输入参数</h2>
+        <div class="slider-group">
+          <label for="contact-myopia" data-i18n="contact.myopia">近视度数</label>
+          <div class="slider-row">
+            <input type="range" id="contact-myopia" min="0" max="20" step="0.25" value="4">
+            <input type="number" id="contact-myopia-val" min="0" max="20" step="0.25" value="4.00">
+            <span class="unit">D</span>
+          </div>
+        </div>
+        <div class="slider-group">
+          <label for="contact-cyl" data-i18n="contact.cyl">散光度数</label>
+          <div class="slider-row">
+            <input type="range" id="contact-cyl" min="0" max="4" step="0.25" value="0">
+            <input type="number" id="contact-cyl-val" min="0" max="4" step="0.25" value="0.00">
+            <span class="unit">D</span>
+          </div>
+        </div>
+      </div>
+      <div class="results card">
+        <h2 data-i18n="contact.resultTitle">隐形眼镜建议度数</h2>
+        <div class="result-grid" id="contact-results"></div>
+        <p class="hint" data-i18n="contact.hint">散光超过 -0.75D 时，通常应优先考虑定制散光片。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tab 5: 配镜工具 -->
+  <section class="tab-panel" id="panel-optical" role="tabpanel" aria-labelledby="tab-optical" hidden>
+    <div class="calc-layout">
+      <div class="inputs card">
+        <h2 data-i18n="optical.minDiameter">最小加工直径</h2>
+        <div class="slider-group">
+          <label for="min-mode" data-i18n="optical.minMode">计算方式</label>
+          <select id="min-mode" class="select-input">
+            <option value="fcd" data-i18n="optical.modeFcd">FCD + ED</option>
+            <option value="ab" data-i18n="optical.modeAb">片宽 + 中梁</option>
+          </select>
+        </div>
+        <div class="slider-group">
+          <label for="min-fcd">FCD</label>
+          <div class="slider-row"><input type="range" id="min-fcd" min="50" max="90" step="1" value="70"><input type="number" id="min-fcd-val" min="50" max="90" step="1" value="70"><span class="unit">mm</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="min-ed">ED</label>
+          <div class="slider-row"><input type="range" id="min-ed" min="40" max="80" step="1" value="55"><input type="number" id="min-ed-val" min="40" max="80" step="1" value="55"><span class="unit">mm</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="min-width" data-i18n="common.lensWidth">镜框的镜片宽度</label>
+          <div class="slider-row"><input type="range" id="min-width" min="30" max="70" step="1" value="52"><input type="number" id="min-width-val" min="30" max="70" step="1" value="52"><span class="unit">mm</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="min-bridge" data-i18n="common.bridge">镜框的中梁宽度</label>
+          <div class="slider-row"><input type="range" id="min-bridge" min="10" max="30" step="1" value="18"><input type="number" id="min-bridge-val" min="10" max="30" step="1" value="18"><span class="unit">mm</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="min-pd" data-i18n="common.pd">瞳距 (PD)</label>
+          <div class="slider-row"><input type="range" id="min-pd" min="40" max="80" step="1" value="62"><input type="number" id="min-pd-val" min="40" max="80" step="1" value="62"><span class="unit">mm</span></div>
+        </div>
+        <div class="tool-divider"></div>
+        <h2 data-i18n="optical.recut">旧片移装风险</h2>
+        <div class="slider-group">
+          <label for="recut-old-width" data-i18n="optical.oldWidth">旧框片宽</label>
+          <div class="slider-row"><input type="range" id="recut-old-width" min="30" max="70" step="1" value="54"><input type="number" id="recut-old-width-val" min="30" max="70" step="1" value="54"><span class="unit">mm</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="recut-old-bridge" data-i18n="optical.oldBridge">旧框中梁</label>
+          <div class="slider-row"><input type="range" id="recut-old-bridge" min="10" max="30" step="1" value="18"><input type="number" id="recut-old-bridge-val" min="10" max="30" step="1" value="18"><span class="unit">mm</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="recut-new-width" data-i18n="optical.newWidth">新框片宽</label>
+          <div class="slider-row"><input type="range" id="recut-new-width" min="30" max="70" step="1" value="52"><input type="number" id="recut-new-width-val" min="30" max="70" step="1" value="52"><span class="unit">mm</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="recut-new-bridge" data-i18n="optical.newBridge">新框中梁</label>
+          <div class="slider-row"><input type="range" id="recut-new-bridge" min="10" max="30" step="1" value="18"><input type="number" id="recut-new-bridge-val" min="10" max="30" step="1" value="18"><span class="unit">mm</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="recut-pd" data-i18n="common.pd">瞳距 (PD)</label>
+          <div class="slider-row"><input type="range" id="recut-pd" min="40" max="80" step="1" value="62"><input type="number" id="recut-pd-val" min="40" max="80" step="1" value="62"><span class="unit">mm</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="recut-power" data-i18n="common.powerShort">度数 (S)</label>
+          <div class="slider-row"><input type="range" id="recut-power" min="-20" max="10" step="0.25" value="-5"><input type="number" id="recut-power-val" min="-20" max="10" step="0.25" value="-5.00"><span class="unit">D</span></div>
+        </div>
+        <div class="tool-divider"></div>
+        <h2 data-i18n="optical.transpose">柱镜转写</h2>
+        <div class="slider-group">
+          <label for="trans-sphere">S</label>
+          <div class="slider-row"><input type="range" id="trans-sphere" min="-20" max="10" step="0.25" value="-4"><input type="number" id="trans-sphere-val" min="-20" max="10" step="0.25" value="-4.00"><span class="unit">D</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="trans-cyl">C</label>
+          <div class="slider-row"><input type="range" id="trans-cyl" min="-10" max="10" step="0.25" value="1"><input type="number" id="trans-cyl-val" min="-10" max="10" step="0.25" value="1.00"><span class="unit">D</span></div>
+        </div>
+        <div class="slider-group">
+          <label for="trans-axis">AXIS</label>
+          <div class="slider-row"><input type="range" id="trans-axis" min="0" max="180" step="1" value="90"><input type="number" id="trans-axis-val" min="0" max="180" step="1" value="90"><span class="unit">°</span></div>
+        </div>
+      </div>
+      <div class="results card">
+        <h2 data-i18n="common.calcResults">计算结果</h2>
+        <div class="result-grid" id="optical-results"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tab 6: 老花方案 -->
+  <section class="tab-panel" id="panel-presbyopia" role="tabpanel" aria-labelledby="tab-presbyopia" hidden>
+    <div class="calc-layout">
+      <div class="inputs card">
+        <h2 data-i18n="common.inputParams">输入参数</h2>
+        <div class="slider-group">
+          <label for="pres-age" data-i18n="pres.age">年龄</label>
+          <div class="slider-row">
+            <input type="range" id="pres-age" min="35" max="80" step="1" value="40">
+            <input type="number" id="pres-age-val" min="35" max="80" step="1" value="40">
+            <span class="unit" data-i18n="pres.years">岁</span>
+          </div>
+        </div>
+        <div class="slider-group">
+          <label for="pres-myopia" data-i18n="pres.myopia">近视度数</label>
+          <div class="slider-row">
+            <input type="range" id="pres-myopia" min="0" max="20" step="0.25" value="0">
+            <input type="number" id="pres-myopia-val" min="0" max="20" step="0.25" value="0.00">
+            <span class="unit">D</span>
+          </div>
+        </div>
+      </div>
+      <div class="results card">
+        <h2 id="pres-title">建议配戴单光老花镜</h2>
+        <p class="hint" id="pres-desc">适合专注近距离阅读</p>
+        <div class="tool-divider"></div>
+        <div class="result-grid" id="pres-results"></div>
       </div>
     </div>
   </section>
@@ -711,10 +868,15 @@ input[type="number"] { -moz-appearance: textfield; }
   </section>
 
   <footer class="info">
-    <span data-i18n="info.notice">仅供非商用 · 数据来源：</span>
-    <a href="http://lensya.com/" target="_blank" rel="noopener">lensya.com</a>
-    <span> · </span>
-    <a href="http://shiputai.cn/" target="_blank" rel="noopener">shiputai.cn</a>
+    <p class="sources">
+      <span data-i18n="info.notice">仅供非商用 · 数据来源：</span>
+      <a href="http://lensya.com/" target="_blank" rel="noopener">lensya.com</a>
+      <span> · </span>
+      <a href="http://shiputai.cn/" target="_blank" rel="noopener">shiputai.cn</a>
+      <span> · </span>
+      <span data-i18n="info.sourceApp">度数大师小程序</span>
+    </p>
+    <p class="disclaimer" data-i18n="info.disclaimer">本项目为开源的非商业性学习工具，所有计算结果均为理论估算，仅供参考，不构成验光、配镜或医疗建议，请以专业机构实际测量为准。各数据来源及「度数大师」等名称的相关权利归其各自所有者所有，本项目与之无隶属或合作关系。如有侵权请联系删除。</p>
   </footer>
 </main>
 <script>
@@ -722,7 +884,10 @@ input[type="number"] { -moz-appearance: textfield; }
 const I18N = {
   zh: {
     title: "近视镜片相关信息计算器",
-    tabs: { thickness: "边缘厚度计算", combo: "最佳组合推荐", npd: "近用瞳距" },
+    tabs: {
+      thickness: "边缘厚度计算", geo: "几何厚度",
+      contact: "隐形换算", optical: "配镜工具", presbyopia: "老花方案", npd: "近用瞳距"
+    },
     common: {
       inputParams: "输入参数", calcResults: "计算结果",
       power: "最高单眼近视度数（不含散光）", pd: "瞳距 (PD)",
@@ -735,26 +900,48 @@ const I18N = {
       edgeDist: "中心到边缘距离 = {0}mm",
       colRefractive: "折射率，是非球面", colCenter: "中心厚", colEdge: "边缘厚",
       colDensity: "理论密度", colAbbe: "理论阿贝数",
-      baseline: "基准", mm: "mm"
-    },
-    tab2: {
-      title: "最佳组合 (按边缘厚度升序)",
-      lwRange: "片宽范围", brRange: "中梁宽范围",
-      note: "片宽 {0}–{1}mm，中梁宽 {2}–{3}mm，共 {4} 种组合",
-      colLensWidth: "片宽", colBridge: "中梁宽",
-      col174: "1.74 边缘厚", col167: "1.67 边缘厚",
-      col160: "1.60 边缘厚", col150: "1.50 边缘厚"
+      baseline: "基准", mm: "mm",
+      frameTip: "镜框尺寸一般刻在镜腿内侧，形如 53□17-140：其中 53 是镜片宽度，17 是中梁宽度，140 是镜腿长度，依此类推。此外，方形镜框配出的镜片边缘通常比圆润镜框更厚。"
     },
     tab3: {
       npdLabel: "近用瞳距 NPD = ",
       formula: "NPD = 远用PD × (距离 − 12) / (距离 + 13)",
       quickLabel: "快捷设定：", hintLabel: "简易系数："
     },
-    info: { notice: "仅供非商用 · 数据来源：" }
+    geo: {
+      index: "折射率", tc: "中心厚", resultTitle: "几何厚度估算",
+      radius: "曲率半径", minDiameter: "加工最小直径", realTc: "实际中心厚",
+      nasal: "鼻侧边缘厚", temporal: "颞侧边缘厚",
+      hint: "该模型来自曲率矢高估算，适合快速比较，不等同于工厂加工结果。"
+    },
+    contact: {
+      myopia: "近视度数", cyl: "散光度数", resultTitle: "隐形眼镜建议度数",
+      equivalent: "等效球镜", contactPower: "折算后度数",
+      hint: "散光超过 -0.75D 时，通常应优先考虑定制散光片。"
+    },
+    optical: {
+      minDiameter: "最小加工直径", recut: "旧片移装风险", transpose: "柱镜转写",
+      oldWidth: "旧框片宽", oldBridge: "旧框中梁", newWidth: "新框片宽", newBridge: "新框中梁",
+      minMode: "计算方式", modeFcd: "FCD + ED", modeAb: "片宽 + 中梁",
+      suggestedDiameter: "建议标准直径", shift: "单眼移心量", risk: "风险等级",
+      newPd: "移装后新瞳距", pdError: "瞳距误差", prism: "棱镜效应", transResult: "转写结果"
+    },
+    pres: {
+      age: "年龄", myopia: "近视度数", years: "岁",
+      add: "下加光 ADD", far: "远用光度", near: "手机/阅读", computer: "电脑/办公", fine: "精细/手工"
+    },
+    info: {
+      notice: "仅供非商用 · 数据来源：",
+      sourceApp: "度数大师小程序",
+      disclaimer: "本项目为开源的非商业性学习工具，所有计算结果均为理论估算，仅供参考，不构成验光、配镜或医疗建议，请以专业机构实际测量为准。各数据来源及「度数大师」等名称的相关权利归其各自所有者所有，本项目与之无隶属或合作关系。如有侵权请联系删除。"
+    }
   },
   en: {
     title: "Myopia Lens Calculator",
-    tabs: { thickness: "Edge Thickness", combo: "Best Combos", npd: "Near PD" },
+    tabs: {
+      thickness: "Edge Thickness", geo: "Geometry",
+      contact: "Contacts", optical: "Optical Tools", presbyopia: "Presbyopia", npd: "Near PD"
+    },
     common: {
       inputParams: "Input Parameters", calcResults: "Results",
       power: "Max Sphere Power (excl. cyl)", pd: "PD",
@@ -767,22 +954,41 @@ const I18N = {
       edgeDist: "Center to Edge Distance = {0}mm",
       colRefractive: "Refractive Index & Design", colCenter: "Center Thickness",
       colEdge: "Edge Thickness", colDensity: "Est. Density", colAbbe: "Est. Abbe",
-      baseline: "baseline", mm: "mm"
-    },
-    tab2: {
-      title: "Best Combos (by Edge Thickness)",
-      lwRange: "Lens Width Range", brRange: "Bridge Range",
-      note: "Lens width {0}–{1}mm, bridge {2}–{3}mm, {4} combos",
-      colLensWidth: "Width", colBridge: "Bridge",
-      col174: "1.74 Edge", col167: "1.67 Edge",
-      col160: "1.60 Edge", col150: "1.50 Edge"
+      baseline: "baseline", mm: "mm",
+      frameTip: "Frame dimensions are usually printed inside the temple, e.g. 53□17-140 — here 53 is the lens width, 17 the bridge width, and 140 the temple length, and so on. Rectangular frames also tend to give thicker lens edges than rounder ones."
     },
     tab3: {
       npdLabel: "Near PD = ",
       formula: "NPD = Distance PD × (ViewDist − 12) / (ViewDist + 13)",
       quickLabel: "Quick:", hintLabel: "Factors:"
     },
-    info: { notice: "Non-commercial use only · Data source: " }
+    geo: {
+      index: "Index", tc: "Center thickness", resultTitle: "Geometric estimate",
+      radius: "Curve radius", minDiameter: "Minimum diameter", realTc: "Actual center thickness",
+      nasal: "Nasal edge", temporal: "Temporal edge",
+      hint: "This uses a simplified sagitta model for quick comparison, not lab-grade processing output."
+    },
+    contact: {
+      myopia: "Myopia", cyl: "Cylinder", resultTitle: "Suggested contact lens power",
+      equivalent: "Spherical equivalent", contactPower: "Converted power",
+      hint: "When cylinder exceeds -0.75D, toric contact lenses are usually preferable."
+    },
+    optical: {
+      minDiameter: "Minimum diameter", recut: "Recut risk", transpose: "Cylinder transposition",
+      oldWidth: "Old width", oldBridge: "Old bridge", newWidth: "New width", newBridge: "New bridge",
+      minMode: "Method", modeFcd: "FCD + ED", modeAb: "Width + bridge",
+      suggestedDiameter: "Suggested stock diameter", shift: "Monocular decentration", risk: "Risk",
+      newPd: "New PD after recut", pdError: "PD error", prism: "Prism effect", transResult: "Transposed RX"
+    },
+    pres: {
+      age: "Age", myopia: "Myopia", years: "y",
+      add: "ADD", far: "Far", near: "Reading", computer: "Computer", fine: "Fine work"
+    },
+    info: {
+      notice: "Non-commercial use only · Data source: ",
+      sourceApp: "Dushu Dashi Mini-Program",
+      disclaimer: "This is an open-source, non-commercial learning tool. All results are theoretical estimates for reference only and do not constitute optometry, dispensing, or medical advice — always rely on measurements from a professional. All data sources and names such as \"Dushu Dashi\" remain the property of their respective owners; this project is not affiliated with or endorsed by them. Contact us for removal if any infringement exists."
+    }
   }
 };
 
@@ -821,14 +1027,20 @@ function applyLang() {
   });
   renderI18n();
   updateThicknessTable();
-  updateComboTable();
+  updateGeoCalculator();
+  updateContactCalculator();
+  updateOpticalTools();
+  updatePresbyopia();
   updateNPD();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   initTabs();
   initTab1();
-  initTab2();
+  initGeoCalculator();
+  initContactCalculator();
+  initOpticalTools();
+  initPresbyopia();
   initTab3();
   applyTheme();
   applyLang();
@@ -845,6 +1057,10 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("lang", currentLang);
       applyLang();
     });
+  });
+
+  window.addEventListener("resize", () => {
+    updateGeoCalculator();
   });
 });
 
@@ -1218,10 +1434,23 @@ function lerp(a, b, t) {
   return a + (b - a) * t;
 }
 
-function findInterval(nodes, value) {
-  if (value <= nodes[0]) return { lo: nodes[0], hi: nodes[0], t: 0 };
-  if (value >= nodes[nodes.length - 1]) {
-    const last = nodes[nodes.length - 1];
+function findInterval(nodes, value, extrapolate = false) {
+  const n = nodes.length;
+  // 外推时用较宽的基线（约 1.00D，4 个节点）估算斜率，避免末端单点噪声导致方向错误
+  const GAP = Math.min(4, n - 1);
+  if (value <= nodes[0]) {
+    // 超出数据下界（如近视 >1000 度）：可选线性外推，t 为负，投影到更高度数一侧
+    if (extrapolate && n >= 2) {
+      return { lo: nodes[0], hi: nodes[GAP], t: (value - nodes[0]) / (nodes[GAP] - nodes[0]) };
+    }
+    return { lo: nodes[0], hi: nodes[0], t: 0 };
+  }
+  if (value >= nodes[n - 1]) {
+    // 超出数据上界：可选线性外推（t > 1）
+    if (extrapolate && n >= 2) {
+      return { lo: nodes[n - 1 - GAP], hi: nodes[n - 1], t: (value - nodes[n - 1 - GAP]) / (nodes[n - 1] - nodes[n - 1 - GAP]) };
+    }
+    const last = nodes[n - 1];
     return { lo: last, hi: last, t: 0 };
   }
   for (let i = 0; i < nodes.length - 1; i++) {
@@ -1234,7 +1463,7 @@ function findInterval(nodes, value) {
 }
 
 function getEdgeThickness(power, lensType, distance) {
-  const pInt = findInterval(POWER_NODES, -Math.abs(power));
+  const pInt = findInterval(POWER_NODES, -Math.abs(power), true);
   const loKey = pInt.lo.toFixed(2);
   const hiKey = pInt.hi.toFixed(2);
   const dataLo = THICKNESS_DATA[loKey] ? (THICKNESS_DATA[loKey][lensType] || null) : null;
@@ -1259,7 +1488,7 @@ function getEdgeThickness(power, lensType, distance) {
 }
 
 function getCenterThickness(power, lensType) {
-  const pInt = findInterval(POWER_NODES, -Math.abs(power));
+  const pInt = findInterval(POWER_NODES, -Math.abs(power), true);
   const loKey = pInt.lo.toFixed(2);
   const hiKey = pInt.hi.toFixed(2);
   const cLo = THICKNESS_DATA[loKey]?.[lensType]?.center;
@@ -1287,6 +1516,360 @@ function getAllThicknesses(power, lensWidth, bridge, pd) {
     }
   }
   return { fd, decent: edgeDist, edgeDist, rows };
+}
+
+/* ===== 度数大师本地业务逻辑 ===== */
+function fmtSigned(value) {
+  if (value === "平光") return currentLang === "en" ? "Plano" : "平光";
+  const n = Number(value);
+  return n > 0 ? "+" + n.toFixed(2) : n.toFixed(2);
+}
+
+function metric(label, value, className = "") {
+  return `<div class="metric ${className}">
+    <span class="metric-label">${label}</span>
+    <span class="metric-value">${value}</span>
+  </div>`;
+}
+
+function bindSelect(id, onChange) {
+  document.getElementById(id).addEventListener("change", onChange);
+}
+
+function calculateGeoThickness(refractionRate, degree, frameWidth, bridgeWidth, pupilDistance, centerThickness, reserved = 0) {
+  const minDiameter = 2 * frameWidth + bridgeWidth - pupilDistance - reserved;
+  if (Math.abs(degree) < 1e-6) {
+    return {
+      R: null,
+      minDiameter,
+      realTc: centerThickness,
+      nasalEdge: centerThickness,
+      temporalEdge: centerThickness
+    };
+  }
+
+  const R = Math.abs(((refractionRate - 1) / degree) * 1000);
+  const nasalDiameter = Math.abs(pupilDistance - bridgeWidth);
+
+  function sagitta(diameter) {
+    const half = diameter / 2;
+    return half >= R ? R : R - Math.sqrt(R * R - half * half);
+  }
+
+  const temporalSag = sagitta(minDiameter);
+  const nasalSag = sagitta(nasalDiameter);
+
+  if (degree <= 0) {
+    return {
+      R,
+      minDiameter,
+      realTc: centerThickness,
+      nasalEdge: centerThickness + nasalSag,
+      temporalEdge: centerThickness + temporalSag
+    };
+  }
+
+  const realTc = Math.max(centerThickness, Math.max(temporalSag, nasalSag) + 1);
+  return {
+    R,
+    minDiameter,
+    realTc,
+    nasalEdge: realTc - nasalSag,
+    temporalEdge: realTc - temporalSag
+  };
+}
+
+function drawGeoLens(result, degree, frameWidth) {
+  const canvas = document.getElementById("geo-lens-canvas");
+  if (!canvas || !canvas.getContext) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const cssWidth = Math.max(320, rect.width || 760);
+  const cssHeight = Math.max(210, rect.height || 240);
+  canvas.width = Math.round(cssWidth * dpr);
+  canvas.height = Math.round(cssHeight * dpr);
+
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  // ===== 仿小程序 drawLens：上边平直、下边二次曲线，左右竖边为内/外侧边缘厚 =====
+  const nasal = result.nasalEdge;
+  const temporal = result.temporalEdge;
+  const centerTc = result.realTc;
+  const maxThick = Math.max(nasal, temporal, centerTc, 0.1);
+
+  const padX = 60;
+  const padTop = 46;
+  const padBottom = 46;
+  const availW = cssWidth - padX * 2;
+  const availH = cssHeight - padTop - padBottom;
+  // X/Y 同一比例，保持真实厚薄比例（与小程序一致）
+  let scale = Math.min(availW / frameWidth, availH / maxThick);
+  scale = Math.max(2.5, Math.min(scale, 11));
+
+  const widthPx = frameWidth * scale;
+  const nPx = nasal * scale;
+  const lPx = temporal * scale;
+  const rPx = centerTc * scale;
+  const shapeH = Math.max(nPx, lPx, rPx);
+
+  const left = (cssWidth - widthPx) / 2;
+  const right = left + widthPx;
+  const centerX = left + widthPx / 2;
+  const topY = padTop + Math.max(0, (availH - shapeH) / 2);
+  // 下边控制点：使曲线中点厚度 = 中心厚（B(0.5) 的 y 恰为 topY + rPx）
+  const ctrlY = topY + 2 * rPx - (nPx + lPx) / 2;
+
+  const text = getComputedStyle(document.documentElement).getPropertyValue("--text").trim() || "#1a1a1a";
+  const muted = getComputedStyle(document.documentElement).getPropertyValue("--text-secondary").trim() || "#6b7280";
+
+  ctx.beginPath();
+  ctx.moveTo(left, topY);
+  ctx.lineTo(right, topY);
+  ctx.lineTo(right, topY + lPx);
+  ctx.quadraticCurveTo(centerX, ctrlY, left, topY + nPx);
+  ctx.closePath();
+  ctx.fillStyle = "#37548E";
+  ctx.fill();
+  ctx.strokeStyle = "#A1B6D9";
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  function label(txt, x, y, align, color) {
+    ctx.font = "13px sans-serif";
+    ctx.fillStyle = color;
+    ctx.textAlign = align;
+    ctx.textBaseline = "middle";
+    ctx.fillText(txt, x, y);
+  }
+
+  // 顶部：加工最小直径
+  label(`${t("geo.minDiameter")}: ${result.minDiameter.toFixed(2)}mm`, centerX, topY - 20, "center", muted);
+
+  // 底部：内侧 / 外侧边缘
+  const bottomLabelY = topY + shapeH + 22;
+  label(`${t("geo.nasal")} ${nasal.toFixed(2)}mm`, left, bottomLabelY, "left", text);
+  label(`${t("geo.temporal")} ${temporal.toFixed(2)}mm`, right, bottomLabelY, "right", text);
+
+  // 正镜（中心更厚）：中间橙色标注中心厚
+  if (centerTc > nasal && centerTc > temporal) {
+    label(`${t("geo.realTc")} ${centerTc.toFixed(2)}mm`, centerX, topY + rPx / 2, "center", "#FF5722");
+  }
+}
+
+function updateGeoCalculator() {
+  const n = parseFloat(document.getElementById("geo-index").value);
+  const degree = parseFloat(document.getElementById("geo-power").value);
+  const width = parseFloat(document.getElementById("geo-width").value);
+  const bridge = parseFloat(document.getElementById("geo-bridge").value);
+  const pd = parseFloat(document.getElementById("geo-pd").value);
+  const tc = parseFloat(document.getElementById("geo-tc").value);
+  const r = calculateGeoThickness(n, degree, width, bridge, pd, tc);
+  document.getElementById("geo-results").innerHTML = [
+    metric(t("geo.radius"), r.R == null ? "--" : r.R.toFixed(2) + "mm"),
+    metric(t("geo.minDiameter"), r.minDiameter.toFixed(2) + "mm"),
+    metric(t("geo.realTc"), r.realTc.toFixed(2) + "mm"),
+    metric(t("geo.nasal"), r.nasalEdge.toFixed(2) + "mm"),
+    metric(t("geo.temporal"), r.temporalEdge.toFixed(2) + "mm")
+  ].join("");
+  drawGeoLens(r, degree, width);
+}
+
+function initGeoCalculator() {
+  const onChange = updateGeoCalculator;
+  bindSelect("geo-index", onChange);
+  bindSlider("geo-power", "geo-power-val", onChange);
+  bindSlider("geo-width", "geo-width-val", onChange);
+  bindSlider("geo-bridge", "geo-bridge-val", onChange);
+  bindSlider("geo-pd", "geo-pd-val", onChange);
+  bindSlider("geo-tc", "geo-tc-val", onChange);
+  onChange();
+}
+
+function computeContactLens(myopia, cylinder) {
+  const sphere = -Math.abs(myopia);
+  const cyl = -Math.abs(cylinder);
+  if (sphere === 0 && cyl === 0) return { equivalent: 0, contact: 0 };
+  const equivalent = sphere + cyl / 2;
+  const contact = equivalent / (1 - 0.012 * equivalent);
+  return {
+    equivalent,
+    contact: Math.round(contact * 4) / 4
+  };
+}
+
+function updateContactCalculator() {
+  const myopia = parseFloat(document.getElementById("contact-myopia").value);
+  const cyl = parseFloat(document.getElementById("contact-cyl").value);
+  const r = computeContactLens(myopia, cyl);
+  document.getElementById("contact-results").innerHTML = [
+    metric(t("contact.equivalent"), fmtSigned(r.equivalent) + "D"),
+    metric(t("contact.contactPower"), fmtSigned(r.contact) + "D")
+  ].join("");
+}
+
+function initContactCalculator() {
+  const onChange = updateContactCalculator;
+  bindSlider("contact-myopia", "contact-myopia-val", onChange);
+  bindSlider("contact-cyl", "contact-cyl-val", onChange);
+  onChange();
+}
+
+function standardDiameter(value) {
+  for (const d of [50, 55, 60, 65, 70, 75, 80]) {
+    if (d >= value) return d + "mm";
+  }
+  return ">80mm";
+}
+
+function calculateMinDiameter(mode, fcd, ed, lensWidth, bridge, pd) {
+  let shift;
+  let minDiameter;
+  if (mode === "ab") {
+    shift = Math.max(0, (lensWidth + bridge - pd) / 2);
+    minDiameter = 2 * lensWidth + bridge - pd + 2;
+  } else {
+    shift = Math.max(0, (fcd - pd) / 2);
+    minDiameter = fcd - pd + ed + 2;
+  }
+  return { shift, minDiameter, suggested: standardDiameter(minDiameter) };
+}
+
+function calculateRecutRisk(oldWidth, oldBridge, newWidth, newBridge, pd, degree) {
+  if (newWidth > oldWidth) {
+    return {
+      level: "fail",
+      title: currentLang === "en" ? "Not suitable" : "无法移装",
+      newPd: "--",
+      pdError: "--",
+      prism: "--"
+    };
+  }
+  const oldFcd = oldWidth + oldBridge;
+  const newFcd = newWidth + newBridge;
+  const fcdDelta = oldFcd - newFcd;
+  const newPd = pd - fcdDelta;
+  const pdError = Math.abs(pd - newPd);
+  const prism = (pdError / 10) * Math.abs(degree);
+  let level = "safe";
+  let title = currentLang === "en" ? "Acceptable" : "可尝试";
+  if (prism >= 1 || pdError >= 4) {
+    level = "danger";
+    title = currentLang === "en" ? "Not recommended" : "强烈不建议";
+  } else if (prism >= 0.5 || pdError >= 2) {
+    level = "warn";
+    title = currentLang === "en" ? "Use caution" : "需谨慎";
+  }
+  return {
+    level,
+    title,
+    newPd: newPd.toFixed(1) + "mm",
+    pdError: pdError.toFixed(1) + "mm",
+    prism: prism.toFixed(2) + "Δ"
+  };
+}
+
+function transposeRx(sphere, cylinder, axis) {
+  const s = sphere + cylinder;
+  const c = -cylinder;
+  const a = axis > 90 ? axis - 90 : axis + 90;
+  return `${fmtSigned(s)} / ${fmtSigned(c)} × ${a}`;
+}
+
+function updateOpticalTools() {
+  const min = calculateMinDiameter(
+    document.getElementById("min-mode").value,
+    parseFloat(document.getElementById("min-fcd").value),
+    parseFloat(document.getElementById("min-ed").value),
+    parseFloat(document.getElementById("min-width").value),
+    parseFloat(document.getElementById("min-bridge").value),
+    parseFloat(document.getElementById("min-pd").value)
+  );
+  const recut = calculateRecutRisk(
+    parseFloat(document.getElementById("recut-old-width").value),
+    parseFloat(document.getElementById("recut-old-bridge").value),
+    parseFloat(document.getElementById("recut-new-width").value),
+    parseFloat(document.getElementById("recut-new-bridge").value),
+    parseFloat(document.getElementById("recut-pd").value),
+    parseFloat(document.getElementById("recut-power").value)
+  );
+  const trans = transposeRx(
+    parseFloat(document.getElementById("trans-sphere").value),
+    parseFloat(document.getElementById("trans-cyl").value),
+    parseFloat(document.getElementById("trans-axis").value)
+  );
+
+  document.getElementById("optical-results").innerHTML = [
+    metric(t("geo.minDiameter"), min.minDiameter.toFixed(1) + "mm"),
+    metric(t("optical.suggestedDiameter"), min.suggested),
+    metric(t("optical.shift"), min.shift.toFixed(1) + "mm"),
+    metric(t("optical.risk"), recut.title, "risk-" + recut.level),
+    metric(t("optical.newPd"), recut.newPd),
+    metric(t("optical.pdError"), recut.pdError),
+    metric(t("optical.prism"), recut.prism),
+    metric(t("optical.transResult"), trans)
+  ].join("");
+}
+
+function initOpticalTools() {
+  const onChange = updateOpticalTools;
+  bindSelect("min-mode", onChange);
+  [
+    ["min-fcd", "min-fcd-val"], ["min-ed", "min-ed-val"], ["min-width", "min-width-val"],
+    ["min-bridge", "min-bridge-val"], ["min-pd", "min-pd-val"],
+    ["recut-old-width", "recut-old-width-val"], ["recut-old-bridge", "recut-old-bridge-val"],
+    ["recut-new-width", "recut-new-width-val"], ["recut-new-bridge", "recut-new-bridge-val"],
+    ["recut-pd", "recut-pd-val"], ["recut-power", "recut-power-val"],
+    ["trans-sphere", "trans-sphere-val"], ["trans-cyl", "trans-cyl-val"], ["trans-axis", "trans-axis-val"]
+  ].forEach(pair => bindSlider(pair[0], pair[1], onChange));
+  onChange();
+}
+
+function updatePresbyopia() {
+  const age = parseInt(document.getElementById("pres-age").value, 10);
+  const myopia = -Math.abs(parseFloat(document.getElementById("pres-myopia").value));
+  let add = 0;
+  if (age >= 40 && age < 45) add = 1;
+  else if (age >= 45 && age < 48) add = 1.5;
+  else if (age >= 48 && age < 50) add = 1.75;
+  else if (age >= 50 && age < 55) add = 2;
+  else if (age >= 55 && age < 60) add = 2.5;
+  else if (age >= 60) add = 3;
+
+  const rounded = value => Math.round(value * 4) / 4;
+  const near = rounded(myopia + add);
+  const computer = rounded(myopia + 0.6 * add);
+  const fine = rounded(near + 0.5);
+  const golden = myopia <= -1 && Math.abs(near) <= 0.25;
+
+  let title = currentLang === "en" ? "Single-vision reading glasses" : "建议配戴单光老花镜";
+  let desc = currentLang === "en" ? "Best for focused near reading." : "适合专注近距离阅读";
+  if (golden) {
+    title = currentLang === "en" ? "Myopia and presbyopia roughly offset" : "近视与老花基本抵消";
+    desc = currentLang === "en" ? "Near work may be comfortable after removing distance glasses." : "看近处可能摘掉远用眼镜即可。";
+  } else if (Math.abs(myopia) > 0) {
+    title = currentLang === "en" ? "Progressive lenses may fit" : "建议配戴渐进多焦点眼镜";
+    desc = currentLang === "en" ? "One pair can cover far and near viewing." : "一副眼镜看远看近，减少频繁摘戴。";
+  }
+
+  document.getElementById("pres-title").textContent = title;
+  document.getElementById("pres-desc").textContent = desc;
+  document.getElementById("pres-results").innerHTML = [
+    metric(t("pres.add"), "+" + add.toFixed(2)),
+    metric(t("pres.far"), myopia === 0 ? (currentLang === "en" ? "Plano" : "平光") : myopia.toFixed(2)),
+    metric(t("pres.near"), fmtSigned(near)),
+    metric(t("pres.computer"), fmtSigned(computer)),
+    metric(t("pres.fine"), fmtSigned(fine))
+  ].join("");
+}
+
+function initPresbyopia() {
+  const onChange = updatePresbyopia;
+  bindSlider("pres-age", "pres-age-val", onChange);
+  bindSlider("pres-myopia", "pres-myopia-val", onChange);
+  onChange();
 }
 
 /* ===== 标签页切换 ===== */
@@ -1377,118 +1960,6 @@ function initTab1() {
   onChange();
 }
 
-/* ===== Tab 2: 最佳组合推荐 ===== */
-
-let comboState = {
-  lwLo: 40, lwHi: 60, lwMin: 35, lwMax: 63, lwStep: 1,
-  brLo: 13, brHi: 23, brMin: 10, brMax: 25, brStep: 1
-};
-
-function initDualSlider(el, state, key, callback) {
-  const track = el.querySelector(".dual-track");
-  const fill = el.querySelector(".dual-fill");
-  const thumbLo = el.querySelector(".dual-thumb-lo");
-  const thumbHi = el.querySelector(".dual-thumb-hi");
-  let active = null;
-
-  function pct(v) { return ((v - state[key + "Min"]) / (state[key + "Max"] - state[key + "Min"])) * 100; }
-  function val(p) { return Math.round(p * (state[key + "Max"] - state[key + "Min"]) / state[key + "Step"]) * state[key + "Step"] + state[key + "Min"]; }
-
-  function updateVisual() {
-    const loPct = pct(state[key + "Lo"]);
-    const hiPct = pct(state[key + "Hi"]);
-    thumbLo.style.left = loPct + "%";
-    thumbHi.style.left = hiPct + "%";
-    fill.style.left = loPct + "%";
-    fill.style.width = (hiPct - loPct) + "%";
-  }
-
-  function getPos(e) {
-    const rect = track.getBoundingClientRect();
-    const x = e.touches ? e.touches[0].clientX : e.clientX;
-    return Math.max(0, Math.min(1, (x - rect.left) / rect.width));
-  }
-
-  el.addEventListener("pointerdown", (e) => {
-    const p = getPos(e);
-    const mid = (pct(state[key + "Lo"]) + pct(state[key + "Hi"])) / 2 / 100;
-    active = p <= mid ? "lo" : "hi";
-    el.setPointerCapture(e.pointerId);
-  });
-
-  el.addEventListener("pointermove", (e) => {
-    if (!active) return;
-    const raw = val(getPos(e));
-    if (active === "lo") {
-      state[key + "Lo"] = Math.max(state[key + "Min"], Math.min(raw, state[key + "Hi"] - state[key + "Step"]));
-    } else {
-      state[key + "Hi"] = Math.min(state[key + "Max"], Math.max(raw, state[key + "Lo"] + state[key + "Step"]));
-    }
-    updateVisual();
-    document.getElementById("combo-" + key + "-lo").textContent = state[key + "Lo"];
-    document.getElementById("combo-" + key + "-hi").textContent = state[key + "Hi"];
-    callback();
-  });
-
-  el.addEventListener("pointerup", () => { active = null; });
-  el.addEventListener("pointerleave", () => { active = null; });
-
-  updateVisual();
-}
-
-function updateComboTable() {
-  const power = parseFloat(document.getElementById("combo-power").value);
-  const pd = parseFloat(document.getElementById("combo-pd").value);
-  const lwMin = comboState.lwLo;
-  const lwMax = comboState.lwHi;
-  const brMin = comboState.brLo;
-  const brMax = comboState.brHi;
-
-  const combos = [];
-  for (let lw = lwMin; lw <= lwMax; lw++) {
-    for (let br = brMin; br <= brMax; br++) {
-      const fd = lw * 2 + br;
-      const edgeDist = (fd - pd) / 2;
-      const t174 = getEdgeThickness(power, "1.74 非球面", edgeDist);
-      const t167 = getEdgeThickness(power, "1.67 非球面", edgeDist);
-      const t160 = getEdgeThickness(power, "1.60 非球面", edgeDist);
-      const t150 = getEdgeThickness(power, "1.50 非球面", edgeDist);
-      if (t174 != null) {
-        combos.push({ lensWidth: lw, bridge: br, t174, t167, t160, t150 });
-      }
-    }
-  }
-
-  combos.sort((a, b) => a.t174 - b.t174);
-
-  document.getElementById("combo-note").textContent =
-    t("tab2.note", lwMin, lwMax, brMin, brMax, combos.length);
-
-  const tbody = document.getElementById("combo-results");
-  const display = combos.slice(0, 50);
-
-  tbody.innerHTML = display.map((c, i) => {
-    const cls = i < 5 ? "top-row" : "";
-    return `<tr class="${cls}">
-      <td>${i + 1}</td>
-      <td>${c.lensWidth}</td>
-      <td>${c.bridge}</td>
-      <td>${c.t174.toFixed(1)}</td>
-      <td>${c.t167.toFixed(1)}</td>
-      <td>${c.t160.toFixed(1)}</td>
-      <td>${c.t150.toFixed(1)}</td>
-    </tr>`;
-  }).join("");
-}
-
-function initTab2() {
-  const onChange = updateComboTable;
-  bindSlider("combo-power", "combo-power-val", onChange);
-  bindSlider("combo-pd", "combo-pd-val", onChange);
-  initDualSlider(document.getElementById("combo-lw-range"), comboState, "lw", onChange);
-  initDualSlider(document.getElementById("combo-br-range"), comboState, "br", onChange);
-}
-
 /* ===== Tab 3: 近用瞳距计算 ===== */
 function calcNPD(distancePD, viewDistanceCm) {
   const viewDistanceMm = viewDistanceCm * 10;
@@ -1504,7 +1975,9 @@ function updateNPD() {
   document.getElementById("npd-label").textContent = t("tab3.npdLabel");
   document.getElementById("npd-result").textContent = npd.toFixed(1);
   document.getElementById("npd-formula-instance").textContent =
-    t(" ", distPD, viewMm, npd.toFixed(1));
+    currentLang === "en"
+      ? `NPD = ${distPD} × (${viewMm} - 12) / (${viewMm} + 13) = ${npd.toFixed(1)}mm`
+      : `NPD = ${distPD} × (${viewMm} - 12) / (${viewMm} + 13) = ${npd.toFixed(1)}mm`;
 }
 
 function initTab3() {
